@@ -1,0 +1,74 @@
+{% extends '_chart.html' %}
+{% block icon %}    
+{% endblock %}
+{% block svg %}
+    <svg  height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/></svg>
+{% endblock  %}
+{% block text %}
+    Datos
+{% endblock  %}
+{% block timeout %}
+    3000
+{% endblock  %}
+{% block url %}'{{url}}'{% endblock  %}
+{% block data_ajax %}
+    "action":"data",
+{% endblock  %}
+{% block data %}
+    labels: [],
+    datasets: [
+        {
+            label: "Nivel Tanque",
+            backgroundColor: "rgba(35,39,132,0.3)",
+            tension: 0.1,
+            borderColor: "",
+            fill: true,
+            data: [],
+        },
+        {
+            label: "Nivel Cisterna",
+            backgroundColor: "rgba(205,199,32,0.3)",
+            tension: 0.1,
+            borderColor: "",
+            fill: true,
+            data: [],
+        },
+        {
+            label: "Acción de Control",
+            backgroundColor: "rgba(105,103,232,0.1)",
+            tension: 0.3,
+            borderColor: "",
+            fill: true,
+            data: [],
+        },
+    ],
+{% endblock  %}
+{% block addData %}
+    _max=false;
+    chart.data.datasets.forEach(datasets => {
+        if (datasets.data.length >= max) {
+            datasets.data.shift();
+            _max=true;
+        }
+        if (datasets.label=="Nivel Tanque")
+            datasets.data.push(data.NT)
+        else if (datasets.label=="Nivel Cisterna")
+            datasets.data.push(data.NC)
+        else if (datasets.label=="Acción de Control")
+            datasets.data.push(data.AC)
+        
+    });
+    chart.data.labels.push(label);
+        chart.update();
+    if (_max==true)
+        chart.data.labels.shift();
+    
+{% endblock  %}
+{% block success %}
+    addData(myChart,'',request.response)
+    $('#on').parent().addClass('active')
+    $('#off').parent().removeClass('active')
+    timeout=setTimeout(getData, ttimeout);
+    //console.log(myChart.data)
+{% endblock  %}
+{% block height %}200{% endblock  %}

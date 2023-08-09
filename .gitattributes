@@ -1,0 +1,3 @@
+#git config --global merge.ours.driver trues
+README.md merge=ours
+core/perf/utils.py merge=ours

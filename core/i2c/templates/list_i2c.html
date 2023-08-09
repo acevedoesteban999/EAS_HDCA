@@ -1,0 +1,117 @@
+{% extends '_list.html' %}
+
+{% block columns %}
+        <th scope="col">Dispositivo</th>
+        <th scope="col">Direc</th>
+        <th scope="col">Estado</th>
+        <th scope="col"></th>
+{% endblock %}
+
+{% block rows %}
+    {% for device in object_list %}
+        <tr class="text-center align-items-center">
+            <td scope="row">{{device.slug}}</td>
+            <td scope="row">{{device.addr}}</td>
+            <td scope="row ">
+                <p>
+                    <span class="badge bg-danger">
+                            Desconectado
+                    </span>
+                </p>
+            </td>
+            <td>
+                
+                
+            <a href="{% url 'i2c_update' user.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-warning btn-xs btn-flat">
+                <i class="fas fa-edit"></i>
+            </a>
+             {% comment %}
+            <a href="{% url 'user_act_desact' user.id %}" data-toggle="tooltip" title="Cambiar estado" class="m-1 btn btn-primary btn-xs btn-flat">
+                <i class="fas fa-regular fa-lightbulb"></i>
+            </a>
+
+            <a href="{% url 'delete_user' user.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-danger btn-xs btn-flat">
+                <i class="fas fa-regular fa-trash"></i>
+            </a> {% endcomment %}
+                
+            </td>
+        </tr>
+    {% endfor %}
+    
+{% endblock %}
+{% block box_footer_buttons %}
+    <a href="{% url 'i2c_create' %}" class="btn btn-primary btn-flat">
+        <i class="fas fa-plus"></i> Agregar I2C 
+    </a>
+    <a href="" class="btn btn-warning btn-flat"  onclick="scan()" data-toggle="modal" data-target="#modal-lg" >
+        <i class="fas fa-plus"></i> Scan
+    </a>
+    <a href="" class="btn btn-success btn-flat" >
+        <i class="fas fa-sync-alt"></i> Actualizar
+    </a>
+    
+{% endblock %}
+
+{% block modal_content %}
+<div class="modal fade" id="modal-lg" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h4 class="modal-title">I2C Scan</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    
+        <div id="content" >
+        
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" onclick="scan()" class="btn btn-warning btn-flat" >Scan</button>
+    </div>
+    </div>
+    
+    </div>
+    
+    </div>
+    <script>
+        function  scan() {
+            $.ajax({
+                url: "{% url 'i2c_list' %}",
+                data: {
+                    "action":'scan',      
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    elem=document.getElementById('content')
+                    elem.innerHTML="<div class='container'>"
+                    request.response.forEach(element => {
+                        elem.innerHTML+="<div class='row text-center' m-2>"
+                            elem.innerHTML+="<div class='col-6'>"
+                                elem.innerHTML+=element
+                            elem.innerHTML+="</div>"
+                            elem.innerHTML+="<div class='col-6'>"
+                                elem.innerHTML+=
+                                "
+                                <a href='{% url 'i2c_create'  %}' data-toggle='tooltip' title='Crear' class='m-1 btn btn-success btn-xs btn-flat'>\
+                                    <i class='fas fa-edit'></i>\
+                                </a>\
+                                "
+                            elem.innerHTML+="</div>"
+                        elem.innerHTML+="</div>"
+                    });
+                    elem.innerHTML="</div>"
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                        }
+            })
+        }
+    </script>    
+{% endblock  %}

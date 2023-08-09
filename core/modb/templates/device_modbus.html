@@ -1,0 +1,206 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container text-center ">
+        <div class="row">
+            <div class="col-12 h2">
+                Modubs
+            </div>
+        </div>
+        <hr>
+        <div class="row ">
+            <div class="col-6">       
+                <div class="h4">
+                    {{object.slug}}
+                </div>     
+            </div>
+            <div class="col-6">
+                <div class="h4">
+                    {{object.ip}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {% include 'chart_modbus.html' %}
+            </div>
+            <div class="col-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        
+                        <div class="custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
+                            <input type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
+                            <label class="custom-control-label" id="labelswitchMode" for="switchMode">Manual</label>
+                        </div>
+                        
+                        <div class="d-block" id="divManual">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                            <input type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
+                                            <label class="custom-control-label" id="labelswitchMotor>" for="switchMotor">Off</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="">
+                                            <label for="rangueValve" id="ValveLabel">Set Point</label>
+                                            <input type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
+                                            <div class="h6" id="ValveValue">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-3">
+                            <label for="rangueSetPoint" id="SetPointLabel">Set Point</label>
+                            <input type="range" onchange="ChangeSetPoint()" class="custom-range custom-range-teal" id="rangueSetPoint">
+                            <div class="h6" id="setPointValue">0</div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <script>
+        function ChangeMotor()
+        {
+            document.getElementById('labelswitchMotor').innerHTML="Cambiando...",
+            $.ajax({
+                url: '{{url}}',
+                data: {
+                    'action': "motor",  
+                    'data':  document.getElementById('switchMotor').checked,
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    console.log(request)
+                    if(request.response==true)
+                    {
+                        document.getElementById('labelswitchMotor').innerHTML="Off";
+                        document.getElementById('switchMotor').checked=false;
+                    }
+                    else
+                    {    
+                        document.getElementById('labelswitchMode').innerHTML="On";
+                        document.getElementById('switchMode').checked=true;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById('switchMotor').checked=document.getElementById('switchMotor').checked ? false : true;
+                    document.getElementById('labelswitchMotor').innerHTML=document.getElementById('switchMotor').checked ? "On" : "Off";
+                }
+            })
+        }
+        function ChangeValve()
+        {
+            document.getElementById('ValveValue').innerHTML="Cambiando...",
+            $.ajax({
+                url: '{{url}}',
+                data: {
+                    'action': "valve",  
+                    'data':  document.getElementById('rangueValve').value,
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    document.getElementById('ValveValue').innerHTML=request.response;
+                    document.getElementById('rangueValve').value=request.response;
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById('ValveValue').innerHTML="0";
+                    document.getElementById('ValvePoint').value=0;
+                }
+            })
+        }
+
+        function ChangeMode()
+        {
+            
+            document.getElementById('labelswitchMode').innerHTML="Cambiando...",
+            $.ajax({
+                url: '{{url}}',
+                data: {
+                    'action': "mode",  
+                    'data':  document.getElementById('switchMode').checked,
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    console.log(request)
+                    if(request.response==true)
+                    {
+                        document.getElementById('labelswitchMode').innerHTML="Modo Manual";
+                        document.getElementById('switchMode').checked=false;
+                        document.getElementById('divManual').setAttribute("class",'d-block')
+                        
+                    }
+                    else
+                    {    
+                        document.getElementById('labelswitchMode').innerHTML="Modo PID";
+                        document.getElementById('switchMode').checked=true;
+                        document.getElementById('divManual').setAttribute("class",'d-none')
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if(document.getElementById('switchMode').checked)
+                    {
+                        document.getElementById('switchMode').checked= false
+                        document.getElementById('labelswitchMode').innerHTML="Modo PID"
+                        document.getElementById('divManual').setAttribute("class",'d-none')
+                    }
+                    else
+                    {
+                        document.getElementById('switchMode').checked= true
+                        document.getElementById('labelswitchMode').innerHTML="Modo Manual"
+                        document.getElementById('divManual').setAttribute("class",'d-block')
+                    }
+                }
+            })
+            
+        }
+        //ChangeMode()
+        function ChangeSetPoint()
+        {
+            document.getElementById('setPointValue').innerHTML="Cambiando...",
+            $.ajax({
+                url: '{{url}}',
+                data: {
+                    'action': "setpoint",  
+                    'data':  document.getElementById('rangueSetPoint').value,
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    document.getElementById('setPointValue').innerHTML=request.response;
+                    document.getElementById('rangueSetPoint').value=request.response;
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById('setPointValue').innerHTML="0";
+                    document.getElementById('rangueSetPoint').value="0";
+                }
+            })
+        }
+        //ChangeSetPoint()
+    </script>
+    
+
+{% endblock  %}

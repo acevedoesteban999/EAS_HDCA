@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% include "perf_chart.html" %}
+        </div>
+        <div class="row ">
+            <div class="card w-100 p-2">
+                <div class="progress-group ">
+                    Almacenamiento
+                    <span class="float-right">
+                        <b>8</b>
+                        /16 gb
+                    </span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-warning" id="barr" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

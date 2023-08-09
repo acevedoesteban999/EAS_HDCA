@@ -1,0 +1,140 @@
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                <h3 class="card-title">
+                    {% block icon %}
+                        <i class="{% block icon_text %}""{% endblock  %}"></i>
+                    {% endblock  %}
+                    {% block svg %}{% endblock  %}
+                    {% block text %}Chart{% endblock  %}
+                </h3>
+                <div class="card-tools">
+
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-sm btn-outline-success active">
+                        <input type="radio" name="options" id="on" onclick="BuTTon(true)"  autocomplete="off" > ON
+                        </label>
+                        <label class="btn btn-sm btn-outline-danger ">
+                        <input type="radio" name="options" id="off" onclick="BuTTon(false)" autocomplete="off"> OFF
+                        </label>
+                    </div>
+                </div>
+                </div>
+                <div class="card-body">
+                <canvas id="Chart" width="400" height="400"></canvas>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock  %}
+<script src="{% static 'js/chart/chart.js' %}"></script>
+{% block script %}
+    <script>
+        var timeout,ttimeout;
+        ttimeout={% block timeout %}1000{% endblock  %}
+        const ctx = document.getElementById("Chart");
+        ctx.height ={% block height %}200{% endblock  %}
+        const myChart = new Chart(ctx, {
+            type: {% block type %}"line"{% endblock  %},
+            data: {
+                {% block data %}
+                    labels: [],
+                    datasets: [
+                        {
+                        label: "",
+                        backgroundColor: "",
+                        tension: 0.1,
+                        borderColor: "",
+                        fill: true,
+                        data: [],
+                        },
+                    ],
+                {% endblock  %}
+            },
+            {% block options %}
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                        stacked: true,
+                        grid: {
+                            display: true,
+                            color: "rgba(255,99,132,0.2)"
+                        }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                                },
+                            
+                        }
+                    }
+                },
+            {% endblock  %}
+        }); 
+        
+        timeout=setTimeout(getData, ttimeout);
+        
+
+        function BuTTon(bool)
+        {
+            clearTimeout(timeout)
+            if (bool==true)
+            {
+                timeout=setTimeout(getData,ttimeout)
+            }
+        }
+
+        function addData(chart, label, data, max = 20) {
+            {% block addData %}
+                if (chart.data.datasets[0].data.length >= max) {
+                    chart.data.datasets[0].data.shift();
+                    chart.data.labels.shift();
+                }
+                chart.data.datasets[0].data.push(data);
+                chart.data.labels.push(label);
+                chart.update();
+            {% endblock  %}
+        }
+
+        function getData()
+        {
+
+            $.ajax({
+                url: {% block url %}"#"{% endblock  %},
+                data: {
+                    {% block data_ajax %}
+                        'action': "null",    
+                    {% endblock  %}
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    {% block success %}
+                        addData(myChart,'',request.response)
+                        $('#on').parent().addClass('active')
+                        $('#off').parent().removeClass('active')
+                        timeout=setTimeout(getData, ttimeout);
+                    {% endblock  %}
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    {% block error %}
+                        $('#on').parent().removeClass('active')
+                        $('#off').parent().removeClass('active')
+                    {% endblock  %}
+                }
+            })
+            
+        }
+
+    </script>
+{% endblock  %}

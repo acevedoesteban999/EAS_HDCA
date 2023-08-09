@@ -1,0 +1,122 @@
+{% extends '_list.html' %}
+
+{% block columns %}
+        <th scope="col">Dispositivo</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">IP</th>
+        <th scope="col">Estado</th>
+        <th scope="col"></th>
+{% endblock %}
+
+{% block rows %}
+    {% for device in object_list %}
+        <tr class="text-center align-items-center">
+            <td scope="row">{{device.slug}}</td>
+            
+            <td scope="row">
+                <span class=" badge bg-{% if device.type == 'T' %}success{% elif device.type == 'U' %}purple{% endif %}">
+                    <div class="h6 m-0 ">
+                        {{device.get_type_display}}
+                    </div>
+                </span>
+            </td>
+            <td scope="row">{{device.ip}}</td>
+            <td scope="row ">
+                <p>
+                    <span class="badge bg-danger">
+                            Desconectado
+                    </span>
+                </p>
+            </td>
+            <td>
+                
+                
+            <a href="{% url 'modbus_update' device.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-warning btn-xs btn-flat">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="{% url 'modbus_device' device.id %}" data-toggle="tooltip" title="Graficar" class="m-1 btn btn-success btn-xs btn-flat">
+                <svg  height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/></svg>
+            </a>
+            
+            {% comment %} <a href="{% url 'modbus_delete' device.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-danger btn-xs btn-flat">
+                <i class="fas fa-regular fa-trash"></i>
+            </a> {% endcomment %}
+                
+            </td>
+        </tr>
+    {% endfor %}
+    
+{% endblock %}
+{% block box_footer_buttons %}
+    <a href="{% url 'modbus_create' %}" class="btn btn-primary btn-flat">
+        <i class="fas fa-plus"></i> Agregar Modbus 
+    </a>
+    <a href="" class="btn btn-success btn-flat" >
+        <i class="fas fa-sync-alt"></i> Actualizar
+    </a>
+    
+{% endblock %}
+
+{% block modal_content %}
+<div class="modal fade" id="modal-lg" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h4 class="modal-title">I2C Scan</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    
+        <div id="content" >
+        
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" onclick="scan()" class="btn btn-warning btn-flat" >Scan</button>
+    </div>
+    </div>
+    
+    </div>
+    
+    </div>
+    <script>
+        function  scan() {
+            $.ajax({
+                url: "{% url 'i2c_list' %}",
+                data: {
+                    "action":'scan',      
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    elem=document.getElementById('content')
+                    elem.innerHTML="<div class='container'>"
+                    request.response.forEach(element => {
+                        elem.innerHTML+="<div class='row text-center' m-2>"
+                            elem.innerHTML+="<div class='col-6'>"
+                                elem.innerHTML+=element
+                            elem.innerHTML+="</div>"
+                            elem.innerHTML+="<div class='col-6'>"
+                                elem.innerHTML+=
+                                "
+                                <a href='{% url 'i2c_create'  %}' data-toggle='tooltip' title='Crear' class='m-1 btn btn-success btn-xs btn-flat'>\
+                                    <i class='fas fa-edit'></i>\
+                                </a>\
+                                "
+                            elem.innerHTML+="</div>"
+                        elem.innerHTML+="</div>"
+                    });
+                    elem.innerHTML="</div>"
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                        }
+            })
+        }
+    </script>    
+{% endblock  %}

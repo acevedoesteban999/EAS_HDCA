@@ -1,0 +1,72 @@
+{% extends '_chart.html' %}
+{% block icon_text %}
+    fas fa-tachometer-alt
+{% endblock  %}
+{% block text %}
+    Data
+{% endblock  %}
+{% block timeout %}
+    2500
+{% endblock  %}
+{% block url %}
+    {{url}}
+{% endblock  %}
+{% block data_ajax %}
+    "action":"data",
+{% endblock  %}
+{% block data %}
+    labels: [],
+    datasets: [
+        {
+        label: "L1",
+        backgroundColor: "rgba(205,199,32,0.3)",
+        tension: 0.1,
+        borderColor: "",
+        fill: true,
+        data: [],
+        },
+        {
+        label: "L2",
+        backgroundColor: "rgba(105,103,232,0.1)",
+        tension: 0.3,
+        borderColor: "",
+        fill: true,
+        data: [],
+        },
+    ],
+{% endblock  %}
+{% block addData %}
+    _max=false;
+    chart.data.datasets.forEach(datasets => {
+        if (datasets.data.length >= max) {
+            datasets.data.shift();
+            _max=true;
+        }
+        if (datasets.label=="L1")
+            datasets.data.push(data.L1)
+        else if (datasets.label=="L2")
+            datasets.data.push(data.L2)
+        
+        
+        
+    });
+    chart.data.labels.push(label);
+    chart.update();
+    if (_max==true)
+        chart.data.labels.shift();
+    /*if (chart.data.datasets[0].data.length >= max) {
+        chart.data.datasets[0].data.shift();
+        chart.data.labels.shift();
+    }
+    chart.data.datasets[0].data.push(data);
+    chart.data.labels.push(label);
+    chart.update();
+    */
+{% endblock  %}
+{% block success %}
+    addData(myChart,'',request.response)
+    $('#on').parent().addClass('active')
+    $('#off').parent().removeClass('active')
+    timeout=setTimeout(getData, ttimeout);
+    //console.log(myChart.data)
+{% endblock  %}
