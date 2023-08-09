@@ -2,8 +2,26 @@ from core.prot.utils import BaseThread
 from .models import ModBus
 import time
 import random
-#from smbus2 import SMBus
 
+"""
+from pymodbus.client import ModbusTcpClient
+import asyncio
+#import pymodbus
+
+#pymodbus.register_write_message()
+async def run():
+    
+    client=ModbusTcpClient("192.168.0.102")
+  
+    client.connect()
+    print(client.read_coils(100,1))
+    client.write_coil(110,True)
+    print(client.read_coils(100,1))
+    client.close()
+  
+    #print('OK',result.registers)
+asyncio.run(run())
+"""
 class ModBusThread(BaseThread):
     object=ModBus
     mode=False
