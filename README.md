@@ -1,1 +1,1 @@
-## Django-AdminLTE-3 Development v0.1
+## Django-AdminLTE-3 Raspberry v0.1
