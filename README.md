@@ -1,5 +1,5 @@
 # Djagno-Adminlte Raspberry
-## v0.1
+
 
 ## Configuraciones de Raspberry para Desplegar Django-Adaminlte-3 en Apache2
 
@@ -23,6 +23,12 @@
 
 
 ### Apache2
+* `sudo nano /etc/apache2/ports.conf`
+```
+...
+Listen #
+```
+
 * `sudo nano /etc/apache2/sites-available/file.conf`
 
 ```
@@ -48,8 +54,8 @@
 * `sudo systemctl reaload apache2`
 
 ### Permisos
-* `sudo chmod 664 ~/project/db.sqlite3`
-* `sudo chmod 777 ~/project`
-* `sudo chown :www-data ~/project/db.sqlite3`
-* `sudo chown :www-data ~/project`
+* `sudo chmod 664 ./db.sqlite3`
+* `sudo chmod 777 ./`
+* `sudo chown :www-data ./db.sqlite3`
+* `sudo chown :www-data ./`
 * `sudo service apache2 restart`
