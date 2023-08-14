@@ -130,9 +130,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Only for development branch
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Only for development branch
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# raspberry branch
+    #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 

@@ -26,26 +26,41 @@ class ModBusThread(BaseThread):
     object=ModBus
     mode=False
     motor=False
-    setpoint=14
+    valve=0
+    setpoint=0
     def __init__(self) -> None:
         super().__init__()
         
+    def get_active(self):    
+        return True
+        return self.is_active(self.object.ip,self.object.type)
+    @staticmethod
+    def is_active(ip,type):
+        if random.randint(1,2)==1:
+            return True
+        return False        
+    
     def set_mode(self,data):
-        print(data)
         if data=='true':
-            self.mode=False
-        else:
             self.mode=True
+        else:
+            self.mode=False
         return self.mode
     
     def set_motor(self,data):
-        print(data)
-        if data=='true':
-            self.motor=False
-        else:
-            self.motor=True
+        if self.mode == False:
+            if data=='true':
+                self.motor=False
+            else:
+                self.motor=True
         return self.motor
     
+    def set_valve(self,data):
+        print(self.mode)
+        if self.mode == False:
+            self.valve=data
+        return self.valve
+     
     def set_setpoint(self,setpoint):
         self.setpoint=setpoint
         return self.setpoint

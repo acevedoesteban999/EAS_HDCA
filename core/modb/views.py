@@ -8,16 +8,28 @@ from django.contrib import messages
 from .utils import ModBusThread
 from django.http import JsonResponse  
 from .utils import ModBusThread
+from django.db.models import F,Value,IntegerField
 # Create your views here.
 
 class ModBusView(MyLoginRequiredMixin,ListView):
     template_name="list_modbus.html"
     permission_required="user.is_development"
     model=ModBus
+    # def get_queryset(self):
+    #     data=super().get_queryset()
+    #     for ob in data.values():
+    #         ob.update({'active':ModBusThread.is_active(ob.get('ip'),ob.get('type'))})
+    #     print(data.values())            
+    #     return data
     
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "ModBus" 
+        context["title"] = "ModBus"
+        mlist=[]
+        for ob in ModBus.objects.all().values('type','id'):
+            mlist.append(ModBusThread.is_active(ob.get('id'),ob.get('type')))
+        context['zlist']=list(zip(context.get('object_list'), mlist))
         return context
 
 class ModBusCreate(MyLoginRequiredMixin,CreateView):
@@ -78,6 +90,10 @@ class ModBusDevice(MyLoginRequiredMixin,DetailView):
     model=ModBus
     permission_required="user.is_development"
     modbus_object=ModBusThread()
+    
+    def user_auth_test(self):
+        return self.modbus_object.get_active()
+    
     
     def dispatch(self, request, *args, **kwargs):
         self.pk=kwargs.get('pk')

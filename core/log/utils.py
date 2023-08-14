@@ -8,6 +8,16 @@ class MyLoginRequiredMixin(LoginRequiredMixin,PermissionRequiredMixin):
     permission_required=None
     permission_denied_message="Permisos insuficientes para acceder a esta zona"
     
+    def user_auth_test(self) -> bool:
+        """A test that is needed (although not sufficient) to authorized the user
+        to perform the view's action"""
+        return True
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_auth_test():
+            return self.handle_no_permission()
+        return super().dispatch(request,args,kwargs)
+    
     def is_ajax(self):
         return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
     

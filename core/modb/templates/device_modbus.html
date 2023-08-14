@@ -20,26 +20,26 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6">
                 {% include 'chart_modbus.html' %}
             </div>
             <div class="col-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        
-                        <div class="custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
+                        <div class="h3" >Modo</div>
+                        <div class="m-3 custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
                             <input type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
                             <label class="custom-control-label" id="labelswitchMode" for="switchMode">Manual</label>
                         </div>
                         
                         <div class="d-block" id="divManual">
                             <div class="card">
-                                <div class="row">
+                                <div class="row align-items-center">
                                     <div class="col-6">
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                             <input type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
-                                            <label class="custom-control-label" id="labelswitchMotor>" for="switchMotor">Off</label>
+                                            <label class="custom-control-label" id="labelswitchMotor" for="switchMotor">Off</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -69,6 +69,7 @@
         function ChangeMotor()
         {
             document.getElementById('labelswitchMotor').innerHTML="Cambiando...",
+
             $.ajax({
                 url: '{{url}}',
                 data: {
@@ -89,8 +90,8 @@
                     }
                     else
                     {    
-                        document.getElementById('labelswitchMode').innerHTML="On";
-                        document.getElementById('switchMode').checked=true;
+                        document.getElementById('labelswitchMotor').innerHTML="On";
+                        document.getElementById('switchMotor').checked=true;
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -142,16 +143,16 @@
                 dataType: 'json',
                 success: function (request) {
                     console.log(request)
-                    if(request.response==true)
+                    if(request.response==false)
                     {
-                        document.getElementById('labelswitchMode').innerHTML="Modo Manual";
+                        document.getElementById('labelswitchMode').innerHTML="Manual";
                         document.getElementById('switchMode').checked=false;
                         document.getElementById('divManual').setAttribute("class",'d-block')
                         
                     }
                     else
                     {    
-                        document.getElementById('labelswitchMode').innerHTML="Modo PID";
+                        document.getElementById('labelswitchMode').innerHTML="PID";
                         document.getElementById('switchMode').checked=true;
                         document.getElementById('divManual').setAttribute("class",'d-none')
                     }
@@ -160,13 +161,13 @@
                     if(document.getElementById('switchMode').checked)
                     {
                         document.getElementById('switchMode').checked= false
-                        document.getElementById('labelswitchMode').innerHTML="Modo PID"
+                        document.getElementById('labelswitchMode').innerHTML="PID"
                         document.getElementById('divManual').setAttribute("class",'d-none')
                     }
                     else
                     {
                         document.getElementById('switchMode').checked= true
-                        document.getElementById('labelswitchMode').innerHTML="Modo Manual"
+                        document.getElementById('labelswitchMode').innerHTML="Manual"
                         document.getElementById('divManual').setAttribute("class",'d-block')
                     }
                 }

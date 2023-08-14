@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block rows %}
-    {% for device in object_list %}
+    
+    {% for device,active in zlist %}
+        
         <tr class="text-center align-items-center">
             <td scope="row">{{device.slug}}</td>
             
@@ -23,8 +25,12 @@
             <td scope="row">{{device.ip}}</td>
             <td scope="row ">
                 <p>
-                    <span class="badge bg-danger">
+                    <span class="badge bg-{% if active == True %}success{% else %}danger{% endif %}">
+                        {% if active == True %}
+                            Conectado
+                        {% else %}
                             Desconectado
+                        {% endif %}
                     </span>
                 </p>
             </td>
@@ -34,9 +40,11 @@
             <a href="{% url 'modbus_update' device.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-warning btn-xs btn-flat">
                 <i class="fas fa-edit"></i>
             </a>
-            <a href="{% url 'modbus_device' device.id %}" data-toggle="tooltip" title="Graficar" class="m-1 btn btn-success btn-xs btn-flat">
-                <svg  height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/></svg>
-            </a>
+            {% if active == True %}
+                <a href="{% url 'modbus_device' device.id %}" data-toggle="tooltip" title="Graficar" class="m-1 btn btn-success btn-xs btn-flat">
+                    <svg  height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/></svg>
+                </a>
+            {% endif %}
             
             {% comment %} <a href="{% url 'modbus_delete' device.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-danger btn-xs btn-flat">
                 <i class="fas fa-regular fa-trash"></i>
@@ -45,7 +53,7 @@
             </td>
         </tr>
     {% endfor %}
-    
+
 {% endblock %}
 {% block box_footer_buttons %}
     <a href="{% url 'modbus_create' %}" class="btn btn-primary btn-flat">
