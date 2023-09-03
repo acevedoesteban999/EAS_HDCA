@@ -1,9 +1,9 @@
-from core.prot.utils import BaseThread
+from core.prot.utils import BaseObject
 from .models import I2C
 import time
 #from smbus2 import SMBus
 
-class I2CThread(BaseThread):
+class I2CThread(BaseObject):
     object=I2C
     def __init__(self) -> None:
         super().__init__()

@@ -1,7 +1,7 @@
 from django.db import models
 from threading import Thread,Lock,Timer
 from abc import ABC, abstractmethod
-class BaseThread(ABC):
+class BaseObject(ABC):
     object=None
     def __init__(self):
         #print('init')
@@ -41,7 +41,7 @@ class BaseThread(ABC):
     def loop(self):
         pass
 
-class Main(BaseThread):
+class Main(BaseObject):
     def start(self,id):
         self.stop()
         self._active=True

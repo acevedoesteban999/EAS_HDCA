@@ -20,32 +20,58 @@
                 </div>
             </div>
         </div>
-        <div class="row align-items-center">
-            <div class="col-6">
-                {% include 'chart_modbus.html' %}
+        <div class="row text-center">
+            <div class="col-4">       
+                <div class="h4">
+                    
+                    <div id="IdFan_Icon"class="badge bg-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M258.6 0c-1.7 0-3.4 .1-5.1 .5C168 17 115.6 102.3 130.5 189.3c2.9 17 8.4 32.9 15.9 47.4L32 224H29.4C13.2 224 0 237.2 0 253.4c0 1.7 .1 3.4 .5 5.1C17 344 102.3 396.4 189.3 381.5c17-2.9 32.9-8.4 47.4-15.9L224 480v2.6c0 16.2 13.2 29.4 29.4 29.4c1.7 0 3.4-.1 5.1-.5C344 495 396.4 409.7 381.5 322.7c-2.9-17-8.4-32.9-15.9-47.4L480 288h2.6c16.2 0 29.4-13.2 29.4-29.4c0-1.7-.1-3.4-.5-5.1C495 168 409.7 115.6 322.7 130.5c-17 2.9-32.9 8.4-47.4 15.9L288 32V29.4C288 13.2 274.8 0 258.6 0zM256 224a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+                    </div>
+                </div>     
             </div>
-            <div class="col-6">
+            <div class="col-4">
+                <div class="h4">
+                    <div id="IdValve_Icon" class="badge bg-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 0c17.7 0 32 14.3 32 32V44l96-12c17.7 0 32 14.3 32 32s-14.3 32-32 32L256 84l-31-3.9-1-.1-1 .1L192 84 96 96C78.3 96 64 81.7 64 64s14.3-32 32-32l96 12V32c0-17.7 14.3-32 32-32zM0 224c0-17.7 14.3-32 32-32h96l22.6-22.6c6-6 14.1-9.4 22.6-9.4H192V116.2l32-4 32 4V160h18.7c8.5 0 16.6 3.4 22.6 9.4L320 192h32c88.4 0 160 71.6 160 160c0 17.7-14.3 32-32 32H416c-17.7 0-32-14.3-32-32s-14.3-32-32-32H315.9c-20.2 29-53.9 48-91.9 48s-71.7-19-91.9-48H32c-17.7 0-32-14.3-32-32V224zM436.8 423.4c1.9-4.5 6.3-7.4 11.2-7.4s9.2 2.9 11.2 7.4l18.2 42.4c1.8 4.1 2.7 8.6 2.7 13.1V480c0 17.7-14.3 32-32 32s-32-14.3-32-32v-1.2c0-4.5 .9-8.9 2.7-13.1l18.2-42.4z"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="h4">
+                    <div id="IdCondu_Icon"class="badge bg-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M269.5 69.9c11.1-7.9 25.9-7.9 37 0C329 85.4 356.5 96 384 96c26.9 0 55.4-10.8 77.4-26.1l0 0c11.9-8.5 28.1-7.8 39.2 1.7c14.4 11.9 32.5 21 50.6 25.2c17.2 4 27.9 21.2 23.9 38.4s-21.2 27.9-38.4 23.9c-24.5-5.7-44.9-16.5-58.2-25C449.5 149.7 417 160 384 160c-31.9 0-60.6-9.9-80.4-18.9c-5.8-2.7-11.1-5.3-15.6-7.7c-4.5 2.4-9.7 5.1-15.6 7.7c-19.8 9-48.5 18.9-80.4 18.9c-33 0-65.5-10.3-94.5-25.8c-13.4 8.4-33.7 19.3-58.2 25c-17.2 4-34.4-6.7-38.4-23.9s6.7-34.4 23.9-38.4C42.8 92.6 61 83.5 75.3 71.6c11.1-9.5 27.3-10.1 39.2-1.7l0 0C136.7 85.2 165.1 96 192 96c27.5 0 55-10.6 77.5-26.1zm37 288C329 373.4 356.5 384 384 384c26.9 0 55.4-10.8 77.4-26.1l0 0c11.9-8.5 28.1-7.8 39.2 1.7c14.4 11.9 32.5 21 50.6 25.2c17.2 4 27.9 21.2 23.9 38.4s-21.2 27.9-38.4 23.9c-24.5-5.7-44.9-16.5-58.2-25C449.5 437.7 417 448 384 448c-31.9 0-60.6-9.9-80.4-18.9c-5.8-2.7-11.1-5.3-15.6-7.7c-4.5 2.4-9.7 5.1-15.6 7.7c-19.8 9-48.5 18.9-80.4 18.9c-33 0-65.5-10.3-94.5-25.8c-13.4 8.4-33.7 19.3-58.2 25c-17.2 4-34.4-6.7-38.4-23.9s6.7-34.4 23.9-38.4c18.1-4.2 36.2-13.3 50.6-25.2c11.1-9.4 27.3-10.1 39.2-1.7l0 0C136.7 373.2 165.1 384 192 384c27.5 0 55-10.6 77.5-26.1c11.1-7.9 25.9-7.9 37 0zm0-144C329 229.4 356.5 240 384 240c26.9 0 55.4-10.8 77.4-26.1l0 0c11.9-8.5 28.1-7.8 39.2 1.7c14.4 11.9 32.5 21 50.6 25.2c17.2 4 27.9 21.2 23.9 38.4s-21.2 27.9-38.4 23.9c-24.5-5.7-44.9-16.5-58.2-25C449.5 293.7 417 304 384 304c-31.9 0-60.6-9.9-80.4-18.9c-5.8-2.7-11.1-5.3-15.6-7.7c-4.5 2.4-9.7 5.1-15.6 7.7c-19.8 9-48.5 18.9-80.4 18.9c-33 0-65.5-10.3-94.5-25.8c-13.4 8.4-33.7 19.3-58.2 25c-17.2 4-34.4-6.7-38.4-23.9s6.7-34.4 23.9-38.4c18.1-4.2 36.2-13.3 50.6-25.2c11.1-9.5 27.3-10.1 39.2-1.7l0 0C136.7 229.2 165.1 240 192 240c27.5 0 55-10.6 77.5-26.1c11.1-7.9 25.9-7.9 37 0z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-md-8 col-12">
+                {% include 'chart_modbus.html' %}
+                
+            </div>
+            <div class="col-md-4 col-12">
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="h3" >Modo</div>
                         <div class="m-3 custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
-                            <input type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
+                            <input disabled type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
                             <label class="custom-control-label" id="labelswitchMode" for="switchMode">Manual</label>
                         </div>
                         
-                        <div class="d-block" id="divManual">
+                        <div class="d-none" id="divManual">
                             <div class="card">
                                 <div class="row align-items-center">
                                     <div class="col-6">
                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                            <input type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
+                                            <input disabled type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
                                             <label class="custom-control-label" id="labelswitchMotor" for="switchMotor">Off</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="">
-                                            <label for="rangueValve" id="ValveLabel">Set Point</label>
-                                            <input type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
+                                            <label for="rangueValve" id="ValveLabel">Valvúla</label>
+                                            <input disabled type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
                                             <div class="h6" id="ValveValue">0</div>
                                         </div>
                                     </div>
@@ -54,7 +80,7 @@
                         </div>
                         <div class="m-3">
                             <label for="rangueSetPoint" id="SetPointLabel">Set Point</label>
-                            <input type="range" onchange="ChangeSetPoint()" class="custom-range custom-range-teal" id="rangueSetPoint">
+                            <input disabled type="range" onchange="ChangeSetPoint()" class="custom-range custom-range-teal" id="rangueSetPoint">
                             <div class="h6" id="setPointValue">0</div>
                         </div>
 
@@ -63,6 +89,7 @@
                 </div>
             </div>
         </div>
+        
         <hr>
     </div>
     <script>
@@ -83,7 +110,7 @@
                 dataType: 'json',
                 success: function (request) {
                     console.log(request)
-                    if(request.response==true)
+                    if(request.response==false)
                     {
                         document.getElementById('labelswitchMotor').innerHTML="Off";
                         document.getElementById('switchMotor').checked=false;
@@ -201,6 +228,53 @@
             })
         }
         //ChangeSetPoint()
+        function First_Load()
+        {
+            $.ajax({
+                url: '{{url}}',
+                data: {
+                    'action': "get_datas",  
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                dataType: 'json',
+                success: function (request) {
+                    $('#switchMode').prop("disabled", false);
+                    $('#switchMode').prop("checked", request.response.mode)
+                    
+                    if(request.response.mode==true)
+                    {
+                        $('#labelswitchMode').text("PID")
+                    }
+                    else
+                    {
+                        $('#divManual').attr("class","d-block")
+                    }
+                    $('#switchMotor').prop("disabled", false);
+                    $('#switchMotor').value=request.response.motor
+                    $('#rangueSetPoint').prop("disabled", false);
+                    $('#rangueSetPoint').val(request.response.setpoint)
+                    $('#setPointValue').text(request.response.setpoint)
+                    
+                    $('#rangueValve').prop("disabled", false);
+                    $('#rangueValve').val(request.response.valve)
+                    $('#ValveValue').text(request.response.valve)
+                    
+                    
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    
+                }
+            })
+
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            First_Load()
+         }, false);
+        
     </script>
     
 
