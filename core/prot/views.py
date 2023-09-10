@@ -25,6 +25,5 @@ class ProtocolView(MyLoginRequiredMixin,TemplateView):
                 'color':'success',
             },
             ]
-        context['No_Back_URL']=True
         return context
     

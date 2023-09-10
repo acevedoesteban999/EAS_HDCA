@@ -46,6 +46,12 @@ class UserUpdateView(MyLoginRequiredMixin,UpdateView):
     template_name = 'update_user.html'
     form_class=UserForm
     permission_required="user.change_user"
+    def user_auth_test(self) -> bool:
+        if self.object.is_superuser :
+            if not self.request.user.is_superuser:
+                return False
+        return super().user_auth_test()
+    
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -75,6 +81,16 @@ class UserDeleteView(MyLoginRequiredMixin,DeleteView):
     permission_required="user.delete_user"
     success_url=reverse_lazy('user_list')
     
+    def user_auth_test(self) -> bool:
+        if self.object.is_superuser :
+            if not self.request.user.is_superuser:
+                return False
+        return super().user_auth_test()
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['title'] = "Eliminar Usuario"
@@ -86,6 +102,16 @@ class UserActDesactView(MyLoginRequiredMixin,DeleteView):
     model=User
     template_name = 'act_desact.html'
     permission_required="user.delete_user"
+    
+    def user_auth_test(self) -> bool:
+        if self.object.is_superuser :
+            if not self.request.user.is_superuser:
+                return False
+        return super().user_auth_test()
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         self.object.is_active=not self.object.is_active

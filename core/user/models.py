@@ -12,4 +12,5 @@ class User(AbstractUser):
             ("act_desact_user","act_desact_user"),
             ("view_binnacle","view_binnacle"),
             ("view_performance","view_performance"),
+            ("view_config","view_config")
             )

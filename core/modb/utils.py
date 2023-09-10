@@ -48,33 +48,31 @@ class ModBusObject(BaseObject):
     
     @staticmethod
     def is_active(ip):
-        return True
         client=ModbusTcpClient(str(ip))
         try:
-            return client.connect()
+            _bool= client.connect()
             client.close()
-            return True
+            return _bool
         except:
-            return False
-        #if random.randint(1,2)==1:
-        #    return True
-        #return False
-        return True        
+            return False      
 
     async def write_coil(self,coil,value):
         self.client.connect()
+        print(coil,value)
         self.client.write_coil(coil,value)
         self.client.close()
     
     async def read_coil(self,coil):
         self.client.connect()
-        self.client.read_coils(coil,1)
+        coil=self.client.read_coils(coil)
         self.client.close()
-        
+        return coil.bits[0]
+    
     async def read_register(self,register):
         self.client.connect()
-        self.client.read_input_registers(register,1)
+        _register=self.client.read_holding_registers(register)
         self.client.close()
+        return int(_register.registers[0])  
     
     async def write_register(self,register,value):
         self.client.connect()
@@ -91,40 +89,31 @@ class ModBusObject(BaseObject):
         self.client.close()
     
     def set_mode(self,data):
-        if data=='true':
-            pass
-            #self.mode=True
-        else:
-            pass
-            #self.mode=False
+        print(data)
+        asyncio.run(self.write_coil(self.object.coil_mode,True if data=='false' else False))
         return self.get_mode()
     
     def get_mode(self):
-        return False
-        return self.mode
-    
+        return asyncio.run(self.read_coil(self.object.coil_mode))
+        
     def set_motor(self,data):
         if self.mode == False:
             if data=='true':
-                pass
-                #asyncio.run(self.write_coil(self.object.coil_motor,False))
+                asyncio.run(self.write_coil(self.object.coil_motor,True))
             else:
-                pass
-                #asyncio.run(self.write_coil(self.object.coil_motor,True))
+                asyncio.run(self.write_coil(self.object.coil_motor,False))
         return self.get_motor()
     
     def get_motor(self):
-        pass
-        return False 
+        return asyncio.run(self.read_coil(self.object.coil_motor))
     
     def set_valve(self,data):
         if self.mode == False:
-            pass
-            #asyncio.run(self.write_register(self.object.coil_valve,int(data)))
+            asyncio.run(self.write_register(self.object.coil_valve,int(data)))
         return self.get_valve()
     
     def get_valve(self):
-        return random.randint(0,100)
+        return asyncio.run(self.read_register(self.object.coil_valve))
     
     def set_setpoint(self,setpoint):
         return self.get_setpoint()
@@ -137,17 +126,17 @@ class ModBusObject(BaseObject):
             'NT':random.randint(0,100),
             'NC':random.randint(0,100),
             'AC':random.randint(0,100),
-            'motor':random.randint(0,1),
-            'valve':random.randint(0,1),
+            'motor':self.get_motor(),
+            'valve':self.get_valve(),
             'contin':random.randint(0,1),
             }
     
     def get_datas(self):
         return {
             'mode':self.get_mode(),
-            'motor':self.get_motor(),
-            'valve':self.get_valve(),
-            'setpoint':self.get_setpoint(),
+            'motor':1,#self.get_motor(),
+            'valve':2,#self.get_valve(),
+            'setpoint':3,#self.get_setpoint(),
             }
     
     def loop(self):
