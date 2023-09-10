@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'adminlte3_theme',
     'core.log',
     'core.user',
-    'core.home',
     'core.conf',
     'core.perf',
     'core.binn',

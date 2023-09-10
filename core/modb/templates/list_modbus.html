@@ -33,7 +33,7 @@
             <td>
                 
                 
-            <a href="{% url 'modbus_update' device.id %}" data-toggle="tooltip" title="Eliminar" class="m-1 btn btn-warning btn-xs btn-flat">
+            <a href="{% url 'modbus_update' device.id %}" data-toggle="tooltip" title="Editar" class="m-1 btn btn-warning btn-xs btn-flat">
                 <i class="fas fa-edit"></i>
             </a>
             <a id="w{{device.id}}" href="{% url 'modbus_device' device.id %}" data-toggle="tooltip" title="Graficar" class="m-1 btn btn-success btn-xs btn-flat d-none">
@@ -86,7 +86,11 @@
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-
+                        $("#span{{device.id}}").empty();
+                        $("#span{{device.id}}").text("Desconectado");
+                        
+                        $("#span{{device.id}}").removeClass("badge-secondary");
+                        $("#span{{device.id}}").addClass("badge-danger");
                     }
                 })
             }

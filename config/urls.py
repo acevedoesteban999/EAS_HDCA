@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 from core.log.utils import MyLoginRequiredMixin
 from core.user.models import User
 from django.contrib.auth.models import Group,Permission
-
+from django.views.generic.base import RedirectView
 def init_groups_permission_sueruser(init=False):
     context=""
     try:
@@ -103,7 +103,7 @@ class InitView(TemplateView):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('init/',InitView.as_view()),
-    path('',include('core.home.urls')),
+    path('',RedirectView.as_view(pattern_name="prot")),
     path('log/',include('core.log.urls')),
     path('user/',include('core.user.urls')),
     path('conf/',include('core.conf.urls')),

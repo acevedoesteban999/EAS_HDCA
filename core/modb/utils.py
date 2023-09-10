@@ -25,13 +25,9 @@ async def run():
     #print('OK',result.registers)
 asyncio.run(run())
 """
-class ModBusObject(BaseObject):
+class ModBusObject():
     object=None
     client=None
-    mode=False
-    motor=False
-    valve=0
-    setpoint=0
     
     def __init__(self,pk) -> None:
         self.object=ModBus.objects.get(pk=pk)
@@ -58,95 +54,137 @@ class ModBusObject(BaseObject):
 
     async def write_coil(self,coil,value):
         self.client.connect()
-        print(coil,value)
         self.client.write_coil(coil,value)
         self.client.close()
-    
+            
     async def read_coil(self,coil):
         self.client.connect()
         coil=self.client.read_coils(coil)
         self.client.close()
         return coil.bits[0]
-    
+        
     async def read_register(self,register):
         self.client.connect()
         _register=self.client.read_holding_registers(register)
         self.client.close()
         return int(_register.registers[0])  
-    
+            
     async def write_register(self,register,value):
         self.client.connect()
         self.client.write_register(register,value)
-        self.client.close()
         
     async def write_registers(self,register,value):
+            self.client.connect()
+            builder=BinaryPayloadBuilder(byteorder=Endian.BIG,wordorder=Endian.Big)
+            builder.add_32bit_float(value)
+            pyload=builder.build()
+            self.client.write_registers(register,pyload,skip_encode=True)
+            self.client.close()
+            
+    async def read_registers(self,register):
         self.client.connect()
-        builder=BinaryPayloadBuilder(byteorder=Endian.BIG,wordorder=Endian.Big)
-        builder.add_32bit_float(value)
-        pyload=builder.build()
-        self.client.write_registers(register,pyload,skip_encode=True)
-        #self.client.write_register(register,value)
+        _register=self.client.read_holding_registers(register,2)
         self.client.close()
-    
+        __register=BinaryPayloadDecoder.fromRegisters(_register.registers, Endian.Big, wordorder=Endian.Little)
+        __register=__register.decode_16bit_float()
+        return __register
+        
     def set_mode(self,data):
-        print(data)
         asyncio.run(self.write_coil(self.object.coil_mode,True if data=='false' else False))
         return self.get_mode()
-    
-    def get_mode(self):
-        return asyncio.run(self.read_coil(self.object.coil_mode))
         
     def set_motor(self,data):
-        if self.mode == False:
+        if self.get_mode() == False:
             if data=='true':
                 asyncio.run(self.write_coil(self.object.coil_motor,True))
             else:
                 asyncio.run(self.write_coil(self.object.coil_motor,False))
         return self.get_motor()
     
-    def get_motor(self):
-        return asyncio.run(self.read_coil(self.object.coil_motor))
-    
     def set_valve(self,data):
-        if self.mode == False:
-            asyncio.run(self.write_register(self.object.coil_valve,int(data)))
+        if self.get_mode() == False:
+            asyncio.run(self.write_register(self.object.register_valve,int(data)))
         return self.get_valve()
     
-    def get_valve(self):
-        return asyncio.run(self.read_register(self.object.coil_valve))
-    
-    def set_setpoint(self,setpoint):
+    def set_setpoint(self,data):
+        asyncio.run(self.write_register(self.object.register_setpoint,int(data)))
         return self.get_setpoint()
     
+    def get_motor(self):
+        while True:
+            try:
+                return asyncio.run(self.read_coil(self.object.coil_motor))
+            except:
+                pass
+    
+    def get_valve(self):
+        while True:
+            try:
+                return asyncio.run(self.read_register(self.object.register_valve))
+            except:
+                pass
+    
+    def get_mode(self):
+        while True:
+            try:
+                return asyncio.run(self.read_coil(self.object.coil_mode))
+            except:
+                pass
+    
     def get_setpoint(self):
-        return random.randint(0,100)
-         
+        while True:
+            try:
+                return asyncio.run(self.read_register(self.object.register_setpoint))
+            except:
+                pass
+        
+    def get_conduct(self):
+        while True:
+            try:
+                return asyncio.run(self.read_coil(self.object.coil_conductor))
+            except:
+                pass
+        
+    def get_tank(self):
+        while True:
+            try:
+                return asyncio.run(self.read_registers(self.object.register_tank))
+            except:
+                pass
+    
+    def get_cistern(self):
+        
+        while True:
+            try:
+                return asyncio.run(self.read_registers(self.object.register_cistern))
+            except:
+                pass
+    
+    def get_output(self):
+        while True:
+            try:
+                return asyncio.run(self.read_registers(self.object.registers_output))
+            except:
+                pass
+        
     def get_data(self):
         return {
-            'NT':random.randint(0,100),
-            'NC':random.randint(0,100),
-            'AC':random.randint(0,100),
+            'NT':self.get_tank(),
+            'NC':self.get_cistern(),
+            'AC':self.get_output(),
+            'SP':self.get_setpoint(),
             'motor':self.get_motor(),
             'valve':self.get_valve(),
-            'contin':random.randint(0,1),
+            'conduct':self.get_conduct(),
             }
     
     def get_datas(self):
         return {
             'mode':self.get_mode(),
-            'motor':1,#self.get_motor(),
-            'valve':2,#self.get_valve(),
-            'setpoint':3,#self.get_setpoint(),
+            'motor':self.get_motor(),
+            'valve':self.get_valve(),
+            'setpoint':self.get_setpoint(),
             }
     
-    def loop(self):
-        pass
-        # while True:
-        #     with self._look:
-        #         if self._active==False:
-        #             break
-                
-        #     print("loop")
-        #     time.sleep(1) 
-
+   
 

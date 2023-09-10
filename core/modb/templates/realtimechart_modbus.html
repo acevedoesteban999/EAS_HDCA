@@ -1,6 +1,5 @@
 {% extends '_realtimechart.html' %}
 {% block text %}asd{% endblock  %}
-{% block prfx %}_1{% endblock  %}
 {% block url %}{% endblock %}
 {% block icon %}{% endblock  %}
 {% block datasets %}
@@ -8,31 +7,37 @@
     label: "Tanque",
     backgroundColor: "",
     tension: 0.1,
-    borderColor: "",
     fill: true,
+    borderColor: "",
     data: [],
-    data:[]
 },
 {
     label: "Cisterna",
     backgroundColor: "",
     tension: 0.1,
+    fill: false,
     borderColor: "",
-    fill: true,
     data: [],
-    data:[]
 },
 {
     label: "Control",
     backgroundColor: "",
     tension: 0.1,
+    fill: false,
     borderColor: "",
-    fill: true,
     data: [],
-    data:[]
+},
+{
+    label: "SetPoint",
+    fill: false,
+    borderDash: [5, 5], 
+    backgroundColor: "",
+    tension: 0,
+    borderColor: "",
+    data: [],
 },
 {% endblock  %}
-{% block duration %}25000{% endblock  %}
+{% block duration %}35000{% endblock  %}
 {% block refresh %}3000{% endblock  %}
 {% block delay %}3000{% endblock  %}
 {% block on_refresh %}
@@ -88,11 +93,12 @@ $.ajax({
         {    
             //$('#IdValve_Icon').attr('class', 'badge bg-danger');
         } {% endcomment %}
-        if(request.response.contin )
+        
+        if(request.response.conduct )
             $('#IdCondu_Icon').attr('class', 'badge bg-success');
         else
             $('#IdCondu_Icon').attr('class', 'badge bg-danger');
-
+            
         myChart{{prfx}}.data.datasets[0].data.push({
             x:Date.now(),
             y:request.response.NT
@@ -104,6 +110,10 @@ $.ajax({
         myChart{{prfx}}.data.datasets[2].data.push({
             x:Date.now(),
             y:request.response.AC
+        });
+        myChart{{prfx}}.data.datasets[3].data.push({
+            x:Date.now(),
+            y:request.response.SP
         });
         myChart{{prfx}}.update('quiet');
     },

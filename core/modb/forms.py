@@ -6,14 +6,17 @@ class ModBusForm(forms.ModelForm):
     #type=forms.ChoiceField(choices=MODB_TYPE)
     class Meta:
         model=ModBus
-        fields = 'slug','ip','type','coil_motor','coil_valve','coil_cistern','coil_tank'
+        fields = "__all__"
         widgets = {
             'slug': forms.TextInput(attrs={'class':'form-control','placeholder': 'Ingrese un nombre'}),
             'type':forms.Select(attrs={'class':'form-control'}),
             'coil_motor':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Motor'}),
-            'coil_valve':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil de la Válvula'}),
-            'coil_cistern':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil de la Cisterna'}),
-            'coil_tank':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Tanque'}),
+            'coil_conductor':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil de Conductividad'}),
+            'coil_mode':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Tanque'}),
+            'register_valve':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de la Válvula'}),
+            'register_tank':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro del Tanque'}),
+            'register_cistern':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de la Cisterna'}),
+            'register_setpoint':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de SetPoint'}),
         }
         
         

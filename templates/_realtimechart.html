@@ -25,7 +25,9 @@
 <script src="{% static 'js/chart/luxon.js' %}"></script>
 <script src="{% static 'js/chart/chartjs-adapter-luxon.js' %}"></script>
 <script src="{% static 'js/chart/chartjs-plugin-streaming.js' %}"></script>
-<script>
+<script src="{% static 'js/chart/moment.js' %}"></script>
+
+<script type="text/javascript">
     
 
     const ctx{{prfx}} = document.getElementById("Chart{{prfx}}");
@@ -33,20 +35,22 @@
     const myChart{{prfx}} = new Chart(ctx{{prfx}}, {
         type: "line",
         data: {
-            
             datasets: [
             {% block datasets %}{% endblock  %}
             ],
         },
         options: {
+            {% block aditional_options %}{% endblock  %}
             maintainAspectRatio: false,
             responsive: true,
             scales: {
                 y:{
+                    display:true,
                     beginAtZero:true
                 },
                 x: {
                     type:'realtime',
+                    display:true,
                     realtime:{
                         duration:{% block duration %}{% endblock  %},
                         refresh: {% block refresh %}{% endblock  %},
@@ -59,7 +63,7 @@
                         }  
                     }
                 },
-              }
+              },
         },
     }); 
     

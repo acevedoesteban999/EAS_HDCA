@@ -16,8 +16,8 @@
             </div>
             <div class="col-4">
 
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-config">
-                    
+                <button type="button" class="m-0 py-1 btn btn-info" data-toggle="modal" data-target="#modal-config">
+                    <i class="fas fa-edit"></i>
                 </button>
             </div>
             <div class="col-4">
@@ -53,7 +53,7 @@
                             
                                 </div>
                                 <div class="col-6 ">
-                                    <h6 class="p-0 m-0" id="valve_num_id">???</h6>
+                                    <h6 class="p-0 m-0" id="valve_num_id"></h6>
                                 </div>
                             </div>
                         </div>
@@ -74,8 +74,10 @@
     </div>
         {% comment %} MODALS {% endcomment %}
         <div class="modal fade" id="modal-config" style="display: none;" aria-hidden="true"> 
+            
             <div class="modal-dialog">
                 <div class="modal-content bg-dark">
+                    
                     <div class="modal-header">
                         <h4 class="modal-title">Configurar</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -104,8 +106,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
-                                                            <div class="">
-                                                                <label for="rangueValve" id="ValveLabel">Valvúla</label>
+                                                            <div class="mt-2 mr-2">
+                                                                
                                                                 <input disabled type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
                                                                 <div class="h6" id="ValveValue">???</div>
                                                             </div>
@@ -126,12 +128,9 @@
                             </div>
                         </div>
                     </div>
-                    {% comment %} <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-outline-light">Save changes</button>
-                    </div> {% endcomment %}
                 </div>
             </div>
+            
         </div>
         
     
@@ -321,7 +320,7 @@
                     
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    
+                    setTimeout(First_Load,1000)
                 }
             })
 
