@@ -25,12 +25,12 @@
 
 {% block nav_links %}
     {% comment %} HOME {% endcomment %}
-    <li class="nav-item">
+    {% comment %} <li class="nav-item">
         <a href="{% url 'home' %}" class="nav-link ">
             <i class="nav-icon fas fa-house"></i>
             <p>Home</p>
         </a>
-    </li>
+    </li> {% endcomment %}
     {% comment %} PROTOCOLS {% endcomment %}
     <li class="nav-item">
         <a href="{% url 'prot' %}" class="nav-link ">
@@ -39,7 +39,7 @@
         </a>
     </li>
     {% comment %} CONFIG {% endcomment %}
-    {% if perms.user.is_development %}
+    {% if perms.user.view_config %}
         <li class="nav-item has-tree-view {% if 'conf' in request.path %}menu-open{% endif %} ">
             <a href="#" class="nav-link menus {% if 'conf' in request.path %}active{% endif %}">
                 <i class="nav-icon fas fa-screwdriver-wrench"></i>
@@ -63,41 +63,48 @@
         </li>
     {% endif %}
     {% comment %} USER {% endcomment %}
-    <li class="nav-item has-tree-view {% if 'user' in request.path %}menu-open{% endif %} ">
-        <a href="#" class="nav-link menus {% if 'user' in request.path %}active{% endif %}">
-            <i class="nav-icon fas fa-users"></i>
-            <p>Usuarios</p>
-            <p><i class="right fas fa-angle-left"></i></p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{% url 'user_list' %}" class="nav-link {% if "user/list" in request.path %}active{% endif %}">
-                    <i class="nav-icon  fas fa-solid fa-users-gear"></i>
-                    Administrar Usuarios
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% url 'user_create' %}" class="nav-link {% if "user/create" in request.path %}active{% endif %}">
-                    <i class="nav-icon fas fa-solid fa-user-plus"></i>
-                    Añadir usuario
-                </a>
-            </li>
-        </ul>
-    </li>
+    {% if perms.user.view_user %}
+        <li class="nav-item has-tree-view {% if 'user' in request.path %}menu-open{% endif %} ">
+            <a href="#" class="nav-link menus {% if 'user' in request.path %}active{% endif %}">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Usuarios</p>
+                <p><i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{% url 'user_list' %}" class="nav-link {% if "user/list" in request.path %}active{% endif %}">
+                        <i class="nav-icon  fas fa-solid fa-users-gear"></i>
+                        Administrar Usuarios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user_create' %}" class="nav-link {% if "user/create" in request.path %}active{% endif %}">
+                        <i class="nav-icon fas fa-solid fa-user-plus"></i>
+                        Añadir usuario
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
     {% comment %} PERFORMANCE {% endcomment %}
-    <li class="nav-item">
-        <a href="{% url 'perf' %}" class="nav-link">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>Rendimiento</p>
-        </a>
-    </li>
+    {% if perms.user.view_performance %}
+        <li class="nav-item">
+            <a href="{% url 'perf' %}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Rendimiento</p>
+            </a>
+        </li>
+    {% endif %}
      {% comment %} BINNACLE {% endcomment %}
-    <li class="nav-item">
-        <a href="{% url 'binn' %}" class="nav-link">
-            <i class="nav-icon fas fa-solid fa-bug"></i>
-            <p>Bítacora de errores</p>
-        </a>
-    </li>
+     
+    {% if perms.user.view_binnacle %}
+        <li class="nav-item">
+            <a href="{% url 'binn' %}" class="nav-link">
+                <i class="nav-icon fas fa-solid fa-bug"></i>
+                <p>Bítacora de errores</p>
+            </a>
+        </li>
+    {% endif %}
     {% comment %} CONTACT {% endcomment %}
     <li class="nav-item">
         <a href="" class="nav-link">

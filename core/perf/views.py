@@ -9,10 +9,17 @@ from .utils import *
 class PerformanceView(MyLoginRequiredMixin,TemplateView):
     template_name="perf.html"
     permission_required="user.view_performance"
-    def post(self,request):
+    
+    def post(self,request,*args, **kwargs):
         if self.is_ajax():
-            if request.POST.get('action')=="data":
-                return JsonResponse({'response':get_data()},safe=False)
+            if request.POST.get('action')=="cpu":
+                return JsonResponse({'response':get_cpu()},safe=False)
+            elif request.POST.get('action')=="ram":
+                return JsonResponse({'response':get_ram()},safe=False)
+            elif request.POST.get('action')=="ethernet":
+                return JsonResponse({'response':get_eth()},safe=False)
+            elif request.POST.get('action')=="temp":
+                return JsonResponse({'response':get_temp()},safe=False)
             elif request.POST.get('action')=="storage":
                 return JsonResponse({'response':get_storage()},safe=False)
         return None

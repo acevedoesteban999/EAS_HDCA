@@ -6,19 +6,10 @@
         <div class="card card-primary card-outline">
             <div class="card-header">
             <h3 class="card-title">
-                <i class="{{icon}}"></i>
-                {{text}}
+                <i class="{% block icon %}{% endblock  %}"></i>
+                {% block text %}{% endblock  %}
             </h3>
             <div class="card-tools">
-
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-sm btn-outline-success active">
-                    <input type="radio" name="options" id="on{{prfx}}" onclick="BuTTon{{prfx}}(true)"  autocomplete="off" > ON
-                    </label>
-                    <label class="btn btn-sm btn-outline-danger ">
-                    <input type="radio" name="options" id="off{{prfx}}" onclick="BuTTon{{prfx}}(false)" autocomplete="off"> OFF
-                    </label>
-                </div>
             </div>
             </div>
             <div class="card-body">
@@ -31,95 +22,53 @@
 
 
 <script src="{% static 'js/chart/chart.js' %}"></script>
-<script>
-    var timeout{{prfx}},ttimeout{{prfx}};
-    ttimeout{{prfx}}={{time}}
+<script src="{% static 'js/chart/luxon.js' %}"></script>
+<script src="{% static 'js/chart/chartjs-adapter-luxon.js' %}"></script>
+<script src="{% static 'js/chart/chartjs-plugin-streaming.js' %}"></script>
+<script src="{% static 'js/chart/moment.js' %}"></script>
+
+<script type="text/javascript">
+    
+
     const ctx{{prfx}} = document.getElementById("Chart{{prfx}}");
-    ctx{{prfx}}.height ={{height}}
+    ctx{{prfx}}.height =200
     const myChart{{prfx}} = new Chart(ctx{{prfx}}, {
         type: "line",
         data: {
-        labels: [],
-        datasets: [
-            {
-            label: "{{text}}",
-            backgroundColor: "{{backgroundColor}}",
-            tension: 0.1,
-            borderColor: "{{borderColor}}",
-            fill: true,
-            data: [],
-            },
-        ],
+            datasets: [
+            {% block datasets %}{% endblock  %}
+            ],
         },
         options: {
+            {% block aditional_options %}{% endblock  %}
             maintainAspectRatio: false,
             responsive: true,
             scales: {
-                y: {
-                  stacked: true,
-                  grid: {
-                    display: true,
-                    color: "rgba(255,99,132,0.2)"
-                  }
+                y:{
+                    display:true,
+                    beginAtZero:true
                 },
                 x: {
-                  grid: {
-                    display: false
-                  }
-                }
-              }
+                    type:'realtime',
+                    display:true,
+                    realtime:{
+                        duration:{% block duration %}{% endblock  %},
+                        refresh: {% block refresh %}{% endblock  %},
+                        delay: {% block delay %}{% endblock  %},
+                        pause: false,
+                        ttl: undefined,
+                        frameRate: 30,
+                        onRefresh: m_chart => {
+                            {% block on_refresh %}{% endblock  %}
+                        }  
+                    }
+                },
+              },
         },
     }); 
     
-    timeout{{prfx}}=setTimeout(getData{{prfx}}, ttimeout{{prfx}});
-    
 
-    function BuTTon{{prfx}}(bool)
-    {
-        clearTimeout(timeout{{prfx}})
-        if (bool==true)
-        {
-            timeout{{prfx}}=setTimeout(getData{{prfx}},ttimeout{{prfx}})
-        }
-    }
 
-    function addData(chart, label, data, max = 20) {
-        if (chart.data.datasets[0].data.length >= max) {
-            chart.data.datasets[0].data.shift();
-            chart.data.labels.shift();
-        }
-        chart.data.datasets[0].data.push(data);
-        chart.data.labels.push(label);
-        chart.update();
-    }
-
-    function getData{{prfx}}()
-    {
-
-        $.ajax({
-            url: '{{url}}',
-            data: {
-                'action': '{{action}}',
-            },
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            dataType: 'json',
-            success: function (request) {
-                addData(myChart{{prfx}},'',request.response)
-                $('#on{{prfx}}').parent().addClass('active')
-                $('#off{{prfx}}').parent().removeClass('active')
-                timeout{{prfx}}=setTimeout(getData{{prfx}}, ttimeout{{prfx}});
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $('#on{{prfx}}').parent().removeClass('active')
-                $('#off{{prfx}}').parent().removeClass('active')
-            }
-        })
-        
-    }
-    
     
      
     

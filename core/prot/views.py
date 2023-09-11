@@ -25,6 +25,5 @@ class ProtocolView(MyLoginRequiredMixin,TemplateView):
                 'color':'success',
             },
             ]
-            
         return context
     

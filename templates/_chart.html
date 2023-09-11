@@ -81,16 +81,16 @@
         
         timeout=setTimeout(getData, ttimeout);
         
-
-        function BuTTon(bool)
-        {
-            clearTimeout(timeout)
-            if (bool==true)
+        {% block Button %}
+            function BuTTon(bool)
             {
-                timeout=setTimeout(getData,ttimeout)
+                clearTimeout(timeout)
+                if (bool==true)
+                {
+                    timeout=setTimeout(getData,ttimeout)
+                }
             }
-        }
-
+        {% endblock %}
         function addData(chart, label, data, max = 20) {
             {% block addData %}
                 if (chart.data.datasets[0].data.length >= max) {

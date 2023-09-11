@@ -1,0 +1,127 @@
+{% extends '_realtimechart.html' %}
+{% block text %}asd{% endblock  %}
+{% block url %}{% endblock %}
+{% block icon %}{% endblock  %}
+{% block datasets %}
+{
+    label: "Tanque",
+    backgroundColor: "",
+    tension: 0.1,
+    fill: true,
+    borderColor: "",
+    data: [],
+},
+{
+    label: "Cisterna",
+    backgroundColor: "",
+    tension: 0.1,
+    fill: false,
+    borderColor: "",
+    data: [],
+},
+{
+    label: "Control",
+    backgroundColor: "",
+    tension: 0.1,
+    fill: false,
+    borderColor: "",
+    data: [],
+},
+{
+    label: "SetPoint",
+    fill: false,
+    borderDash: [5, 5], 
+    backgroundColor: "",
+    tension: 0,
+    borderColor: "",
+    data: [],
+},
+{% endblock  %}
+{% block duration %}35000{% endblock  %}
+{% block refresh %}3000{% endblock  %}
+{% block delay %}3000{% endblock  %}
+{% block on_refresh %}
+{% comment %} _data=JSON.stringify({ action: 'data'});
+fetch("{{url}}", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        'X-CSRFToken': csrftoken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    },
+    body: _data,
+    })
+    .then(response =>  response.json())
+    .then(data => 
+    {
+        myChart{{prfx}}.data.datasets[0].data.push({
+            x:Date.now(),
+            y:"22"
+        });
+        myChart{{prfx}}.update('quiet');
+    })
+    .catch(error => {
+       
+    }
+); {% endcomment %}
+
+$.ajax({
+    url: '{{url}}',
+    data: {
+        'action': 'data',
+    },
+    type: 'POST',
+    headers: {
+        'X-CSRFToken': csrftoken
+    },
+    dataType: 'json',
+    success: function (request) {
+        if(request.response.motor )
+            $('#IdFan_Icon').attr('class', 'badge bg-success');
+        else
+            $('#IdFan_Icon').attr('class', 'badge bg-danger');
+        $('#valve_num_id').text(request.response.valve)
+        $('#IdValve_Icon').attr('class', 'badge bg-info');
+        {% comment %} if(request.response.valve )
+        {
+            //$('#IdValve_Icon').attr('class', 'badge bg-success');
+            $('#valve_num_id').text(request.response.valve)
+        }
+        else
+        {    
+            //$('#IdValve_Icon').attr('class', 'badge bg-danger');
+        } {% endcomment %}
+        
+        if(request.response.conduct )
+            $('#IdCondu_Icon').attr('class', 'badge bg-success');
+        else
+            $('#IdCondu_Icon').attr('class', 'badge bg-danger');
+            
+        myChart{{prfx}}.data.datasets[0].data.push({
+            x:Date.now(),
+            y:request.response.NT
+        });
+        myChart{{prfx}}.data.datasets[1].data.push({
+            x:Date.now(),
+            y:request.response.NC
+        });
+        myChart{{prfx}}.data.datasets[2].data.push({
+            x:Date.now(),
+            y:request.response.AC
+        });
+        myChart{{prfx}}.data.datasets[3].data.push({
+            x:Date.now(),
+            y:request.response.SP
+        });
+        myChart{{prfx}}.update('quiet');
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+        $('#IdFan_Icon').attr('class', 'badge bg-secondary');
+        $('#IdValve_Icon').attr('class', 'badge bg-secondary');
+        $('#IdCondu_Icon').attr('class', 'badge bg-secondary');
+    }
+}) 
+
+{% endblock  %}

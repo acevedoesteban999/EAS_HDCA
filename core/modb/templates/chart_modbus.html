@@ -69,6 +69,39 @@
     $('#on').parent().addClass('active')
     $('#off').parent().removeClass('active')
     timeout=setTimeout(getData, ttimeout);
-    //console.log(myChart.data)
+    if(request.response.motor )
+        $('#IdFan_Icon').attr('class', 'badge bg-success');
+    else
+        $('#IdFan_Icon').attr('class', 'badge bg-danger');
+    if(request.response.valve )
+        $('#IdValve_Icon').attr('class', 'badge bg-success');
+    else
+        $('#IdValve_Icon').attr('class', 'badge bg-danger');
+    if(request.response.contin )
+        $('#IdCondu_Icon').attr('class', 'badge bg-success');
+    else
+        $('#IdCondu_Icon').attr('class', 'badge bg-danger');
+
 {% endblock  %}
 {% block height %}200{% endblock  %}
+{% block error %}
+    $('#on').parent().removeClass('active');
+    $('#off').parent().removeClass('active');
+    $('#IdFan_Icon').attr('class', 'badge bg-secondary');
+    $('#IdValve_Icon').attr('class', 'badge bg-secondary');
+    $('#IdCondu_Icon').attr('class', 'badge bg-secondary');
+{% endblock  %}
+{% block Button %}
+    function BuTTon(bool)
+    {
+
+        clearTimeout(timeout)
+        if (bool==true)
+        {
+            timeout=setTimeout(getData,ttimeout)
+        }
+        $('#IdFan_Icon').attr('class', 'badge bg-secondary');
+        $('#IdValve_Icon').attr('class', 'badge bg-secondary');
+        $('#IdCondu_Icon').attr('class', 'badge bg-secondary');
+    }
+{% endblock %}

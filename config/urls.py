@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 from core.log.utils import MyLoginRequiredMixin
 from core.user.models import User
 from django.contrib.auth.models import Group,Permission
-
+from django.views.generic.base import RedirectView
 def init_groups_permission_sueruser(init=False):
     context=""
     try:
@@ -40,30 +40,38 @@ def init_groups_permission_sueruser(init=False):
                     'act_desact_user',
                     'view_performance',
                     'view_binnacle',
+                    'view_config'
                 ],
                 'Admin':[
                     'is_admin',
+                    'view_user',
+                    'add_user',
+                    'change_user',
+                    'delete_user',
+                    'act_desact_user',
+                    'view_performance',
+                    'view_binnacle',
+                    'view_config',
                 ],
                 'Guest':[
                     'is_guest',
+                    #'view_performance',
+                    #'view_binnacle',
                 ]
             }
             for gn,pl in l.items():
                 try:
                     g=Group.objects.get_or_create(name=gn)[0]
-                    print(gn)
+                    g.permissions.clear()
                     context+="{}<br>".format(gn)
                     for pn in pl: 
                         try:
                             p=Permission.objects.get(codename=pn)
-                            print("\t",pn)
                             context+="<dd>{}</dd><br>".format(pn)
                             g.permissions.add(p)
                         except Exception as e:
-                            print("E!:",e,":",pn)
                             context+="<br>Error:{}:    {}<br><br>".format(e,pn)
                 except Exception as e:
-                    print("E!:",e,":",gn)
                     context+="<br>Error:{}:    {}<br><br>".format(e,gn)
             u=User.objects.get_or_create(
                 first_name="Super User",
@@ -77,7 +85,6 @@ def init_groups_permission_sueruser(init=False):
                 u.set_password('superuser')
                 u.save()
             u.groups.add(Group.objects.get(name="Developer"))
-            print('superuser')
             context+="{} Super User<br>".format("Created" if uu==True else "See",gn)
             context+="<br><a href='{}' role='btn'>Volver</a>".format(reverse_lazy('process'))
     except:
@@ -87,7 +94,7 @@ def init_groups_permission_sueruser(init=False):
 init_groups_permission_sueruser(True)
 
 
-class InitView(MyLoginRequiredMixin,TemplateView):
+class InitView(TemplateView):
     def get(self,request):
         if request.user.is_superuser:
             return HttpResponse(init_groups_permission_sueruser())
@@ -96,7 +103,7 @@ class InitView(MyLoginRequiredMixin,TemplateView):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('init/',InitView.as_view()),
-    path('',include('core.home.urls')),
+    path('',RedirectView.as_view(pattern_name="prot")),
     path('log/',include('core.log.urls')),
     path('user/',include('core.user.urls')),
     path('conf/',include('core.conf.urls')),

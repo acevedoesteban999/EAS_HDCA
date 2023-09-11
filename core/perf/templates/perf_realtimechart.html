@@ -1,0 +1,48 @@
+{% extends '_realtimechart.html' %}
+{% block text %}{{text}}{% endblock  %}
+{% block url %}{{url}}{% endblock %}
+{% block icon %}{{icon}}{% endblock  %}
+{% block datasets %}
+{
+    label: "{{text}}",
+    backgroundColor: "",
+    tension: 0.1,
+    fill: true,
+    borderColor: "",
+    data: [],
+},
+{% endblock  %}
+{% block aditional_options %}
+plugins: {
+    legend: {
+        display: false, 
+    }
+},
+{% endblock  %}
+{% block duration %}35000{% endblock  %}
+{% block refresh %}3000{% endblock  %}
+{% block delay %}3000{% endblock  %}
+{% block on_refresh %}
+
+$.ajax({
+    url: '{{url}}',
+    data: {
+        'action': '{{action}}',
+    },
+    type: 'POST',
+    headers: {
+        'X-CSRFToken': csrftoken
+    },
+    dataType: 'json',
+    success: function (request) {
+        myChart{{prfx}}.data.datasets[0].data.push({
+            x:Date.now(),
+            y:request.response
+        });
+        myChart{{prfx}}.update('quiet');
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+    }
+}) 
+
+{% endblock  %}

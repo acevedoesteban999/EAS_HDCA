@@ -1,0 +1,103 @@
+{% extends '_base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-6">
+                
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit"></i>
+                            {{ title }}
+                        </h3>
+                    </div> {% endcomment %}
+                    <div class="card-body" style="display: block;">
+                        <div class="container-fluid">
+                            {% for field in form.visible_fields %}
+                                <div class="form-group">
+                                    <label>{{ field.label }}:</label>
+                                        <br>
+                                        {{ field }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="row">
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Nombre</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.slug}}</p>
+                            </div>
+                            <div class="col-6 my-1">
+                                <p class="card-text">IP</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.ip}}</p>
+                            </div>
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Tipo</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.get_type_display}}</p>
+                            </div>
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Motor</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.coil_motor}}</p>
+                            </div>
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Válvula</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.register_valve}}</p>
+                            </div>
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Sensor Tanque</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.register_tank}}</p>
+                            </div>
+
+                            <div class="col-6 my-1">
+                                <p class="card-text">Sensor Cisterna</p>
+                            </div>
+                            
+                            <div class="col-6 my-1">
+                                <p class="card-text">{{object.register_cistern}}</p>
+                            </div>
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-auto ">
+                <div class="btn-info px-4 py-2 redounded" style="border-radius: 60px;">
+                    Iniciar
+                </div>
+            </div>
+        </div>
+    </div>
+  
+{% endblock %}
