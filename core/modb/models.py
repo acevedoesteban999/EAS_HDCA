@@ -4,7 +4,7 @@ from core.prot.models import BasePortocol
 # Create your models here.
 MODB_TYPE = [
     ("T", "TCP"),
-    ("U", "UART"),
+    ("U", "UDP"),
 ]
 class ModBus(BasePortocol):
     ip=models.GenericIPAddressField(protocol="both", unpack_ipv4=False)

@@ -2,6 +2,7 @@ from core.prot.utils import BaseObject
 from .models import ModBus
 import time
 import random
+import struct
 from pymodbus.client import ModbusTcpClient,ModbusUdpClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder,BinaryPayloadDecoder
@@ -58,37 +59,45 @@ class ModBusObject():
         self.client.close()
             
     async def read_coil(self,coil):
-        self.client.connect()
-        coil=self.client.read_coils(coil)
-        self.client.close()
-        return coil.bits[0]
-        
+        try:
+            self.client.connect()
+            coil=self.client.read_coils(coil)
+            self.client.close()
+            return coil.bits[0]
+        except:
+            return None
     async def read_register(self,register):
-        self.client.connect()
-        _register=self.client.read_holding_registers(register)
-        self.client.close()
-        return int(_register.registers[0])  
-            
+        try:
+            self.client.connect()
+            _register=self.client.read_holding_registers(register)
+            self.client.close()
+            return int(_register.registers[0])  
+        except:
+            return None
     async def write_register(self,register,value):
         self.client.connect()
         self.client.write_register(register,value)
         
     async def write_registers(self,register,value):
             self.client.connect()
-            builder=BinaryPayloadBuilder(byteorder=Endian.BIG,wordorder=Endian.Big)
-            builder.add_32bit_float(value)
-            pyload=builder.build()
-            self.client.write_registers(register,pyload,skip_encode=True)
+            # Convert the float value to a binary representation
+            binary_data = struct.pack('!f', value)
+            # Extract the two unsigned integers from the binary representation
+            uint1, uint2 = struct.unpack('!HH', binary_data)
+            a=self.client.write_registers(register,[uint1,uint2])
+            print("A",a.isError())
             self.client.close()
             
     async def read_registers(self,register):
-        self.client.connect()
-        _register=self.client.read_holding_registers(register,2)
-        self.client.close()
-        __register=BinaryPayloadDecoder.fromRegisters(_register.registers, Endian.Big, wordorder=Endian.Little)
-        __register=__register.decode_16bit_float()
-        return __register
-        
+        try:
+            self.client.connect()
+            _register=self.client.read_holding_registers(register,2)
+            self.client.close()
+            combined_uint = (_register.registers[0] << 16) | (_register.registers[1] & 0xFFFF)
+            float_value = struct.unpack('!f', struct.pack('!I', combined_uint))[0]
+            return float_value
+        except:
+            return None
     def set_mode(self,data):
         asyncio.run(self.write_coil(self.object.coil_mode,True if data=='false' else False))
         return self.get_mode()
@@ -107,65 +116,33 @@ class ModBusObject():
         return self.get_valve()
     
     def set_setpoint(self,data):
-        asyncio.run(self.write_register(self.object.register_setpoint,int(data)))
+        asyncio.run(self.write_registers(self.object.register_setpoint,int(data)))
         return self.get_setpoint()
     
     def get_motor(self):
-        while True:
-            try:
-                return asyncio.run(self.read_coil(self.object.coil_motor))
-            except:
-                pass
-    
+        
+        return asyncio.run(self.read_coil(self.object.coil_motor))
+        
     def get_valve(self):
-        while True:
-            try:
-                return asyncio.run(self.read_register(self.object.register_valve))
-            except:
-                pass
+        return asyncio.run(self.read_register(self.object.register_valve))
     
     def get_mode(self):
-        while True:
-            try:
-                return asyncio.run(self.read_coil(self.object.coil_mode))
-            except:
-                pass
-    
+        return asyncio.run(self.read_coil(self.object.coil_mode))
+        
     def get_setpoint(self):
-        while True:
-            try:
-                return asyncio.run(self.read_register(self.object.register_setpoint))
-            except:
-                pass
+        return asyncio.run(self.read_registers(self.object.register_setpoint))
         
     def get_conduct(self):
-        while True:
-            try:
-                return asyncio.run(self.read_coil(self.object.coil_conductor))
-            except:
-                pass
+        return asyncio.run(self.read_coil(self.object.coil_conductor))
         
     def get_tank(self):
-        while True:
-            try:
-                return asyncio.run(self.read_registers(self.object.register_tank))
-            except:
-                pass
-    
-    def get_cistern(self):
+        return asyncio.run(self.read_registers(self.object.register_tank))
         
-        while True:
-            try:
-                return asyncio.run(self.read_registers(self.object.register_cistern))
-            except:
-                pass
-    
+    def get_cistern(self):
+        return asyncio.run(self.read_registers(self.object.register_cistern))
+        
     def get_output(self):
-        while True:
-            try:
-                return asyncio.run(self.read_registers(self.object.registers_output))
-            except:
-                pass
+        return asyncio.run(self.read_registers(self.object.registers_output))
         
     def get_data(self):
         return {
@@ -178,13 +155,19 @@ class ModBusObject():
             'conduct':self.get_conduct(),
             }
     
-    def get_datas(self):
-        return {
-            'mode':self.get_mode(),
-            'motor':self.get_motor(),
-            'valve':self.get_valve(),
-            'setpoint':self.get_setpoint(),
-            }
+    def get_datas(self,count=10):
+        if count==0:
+            return None
+        try:
+            return {
+                'mode':self.get_mode(),
+                'motor':self.get_motor(),
+                'valve':self.get_valve(),
+                'setpoint':self.get_setpoint(),
+                }
+        except:
+            time.sleep(1)
+            return self.get_datas(count-1)
     
    
 

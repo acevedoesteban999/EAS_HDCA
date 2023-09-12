@@ -1,19 +1,17 @@
 {% extends '_realtimechart.html' %}
-{% block text %}asd{% endblock  %}
+{% block text %}{% endblock  %}
 {% block url %}{% endblock %}
 {% block icon %}{% endblock  %}
 {% block datasets %}
 {
     label: "Tanque",
-    backgroundColor: "",
     tension: 0.1,
-    fill: true,
+    fill: false,
     borderColor: "",
     data: [],
 },
 {
     label: "Cisterna",
-    backgroundColor: "",
     tension: 0.1,
     fill: false,
     borderColor: "",
@@ -21,7 +19,6 @@
 },
 {
     label: "Control",
-    backgroundColor: "",
     tension: 0.1,
     fill: false,
     borderColor: "",
@@ -31,15 +28,14 @@
     label: "SetPoint",
     fill: false,
     borderDash: [5, 5], 
-    backgroundColor: "",
     tension: 0,
     borderColor: "",
     data: [],
 },
 {% endblock  %}
 {% block duration %}35000{% endblock  %}
-{% block refresh %}3000{% endblock  %}
-{% block delay %}3000{% endblock  %}
+{% block refresh %}4000{% endblock  %}
+{% block delay %}4000{% endblock  %}
 {% block on_refresh %}
 {% comment %} _data=JSON.stringify({ action: 'data'});
 fetch("{{url}}", {
