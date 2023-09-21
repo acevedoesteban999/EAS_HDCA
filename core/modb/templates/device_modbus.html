@@ -9,32 +9,32 @@
         </div>
         <hr>
         <div class="row ">
-            <div class="col-4">       
+            <div class="col-12 col-sm-4">       
                 <div class="h4">
                     {{object.slug}}
                 </div>     
             </div>
-            <div class="col-4">
+            <div class="col-12 col-sm-4">
                 {% if perms.user.modbus_perm %}
                     <button type="button" class="m-0 py-1 btn btn-info" data-toggle="modal" data-target="#modal-config">
                         <i class="fas fa-edit"></i>
                     </button>
                 {% endif %}
             </div>
-            <div class="col-4">
+            <div class="col-12 col-sm-4">
                 <div class="h4">
                     {{object.ip}}
                 </div>
             </div>
         </div>
         
-        <div class="row align-items-center">
-            <div class="col-8">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-10 col-sm-8">
                 {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
                 {% include 'realtimechart_modbus.html' with prfx="_1" %}
   
             </div>
-            <div class="col-4">
+            <div class="col-10 col-sm-4">
                 {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
                 {% include 'realtimechart_modbus1.html' with prfx="_2" %}
   

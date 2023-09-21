@@ -89,7 +89,7 @@
     {% comment %} PERFORMANCE {% endcomment %}
     {% if perms.user.view_performance %}
         <li class="nav-item">
-            <a href="{% url 'perf' %}" class="nav-link">
+            <a href="{% url 'perf' %}" class="nav-link {% if 'perf' in request.path %}active{% endif %}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>Rendimiento</p>
             </a>
@@ -99,13 +99,19 @@
      
     {% if perms.user.view_binnacle %}
         <li class="nav-item">
-            <a href="{% url 'binn' %}" class="nav-link">
+            <a href="{% url 'binn' %}" class="nav-link {% if 'binn' in request.path %}active{% endif %}">
                 <i class="nav-icon fas fa-solid fa-bug"></i>
                 <p>Bítacora de errores</p>
             </a>
         </li>
     {% endif %}
     {% comment %} CONTACT {% endcomment %}
+    <li class="nav-item">
+        <a href="{% url 'qr' %}" class="nav-link {% if 'QR' in request.path %}active{% endif %}">
+            <i class="nav-icon fas fa-solid fa-qrcode"></i>
+            <p>QR</p>
+        </a>
+    </li>
     <li class="nav-item">
         <a href="" class="nav-link">
             <i class="nav-icon fas fa-regular fa-address-book"></i>

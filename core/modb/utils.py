@@ -56,30 +56,44 @@ class ModBusObject():
     async def write_coil(self,coil,value):
         self.client.connect()
         self.client.write_coil(coil,value)
+        time.sleep(1)
         self.client.close()
             
     async def read_coil(self,coil):
         try:
             self.client.connect()
             coil=self.client.read_coils(coil)
-            time.sleep(1)
+            #time.sleep(1)
             self.client.close()
             return coil.bits[0]
         except:
-            return None
+            time.sleep(2)
+            self.client.connect()
+            coil=self.client.read_coils(coil)
+            #time.sleep(1)
+            self.client.close()
+            return coil.bits[0]
+            #return None
     async def read_register(self,register):
         try:
             self.client.connect()
             _register=self.client.read_holding_registers(register)
             self.client.close()
-            time.sleep(1)
+            #time.sleep(1)
             return int(_register.registers[0])  
         except:
-            return None
+            time.sleep(2)
+            self.client.connect()
+            _register=self.client.read_holding_registers(register)
+            self.client.close()
+            #time.sleep(1)
+            return int(_register.registers[0])  
+            #return None
     async def write_register(self,register,value):
         self.client.connect()
         self.client.write_register(register,value)
-        
+        time.sleep(1)
+        self.client.close()
     async def write_registers(self,register,value):
             self.client.connect()
             # Convert the float value to a binary representation
@@ -87,6 +101,7 @@ class ModBusObject():
             # Extract the two unsigned integers from the binary representation
             uint1, uint2 = struct.unpack('!HH', binary_data)
             self.client.write_registers(register,[uint1,uint2])
+            time.sleep(1)
             self.client.close()
             
     async def read_registers(self,register):
@@ -98,7 +113,14 @@ class ModBusObject():
             float_value = struct.unpack('!f', struct.pack('!I', combined_uint))[0]
             return float_value
         except:
-            return None
+            time.sleep(2)
+            self.client.connect()
+            _register=self.client.read_holding_registers(register,2)
+            self.client.close()
+            combined_uint = (_register.registers[0] << 16) | (_register.registers[1] & 0xFFFF)
+            float_value = struct.unpack('!f', struct.pack('!I', combined_uint))[0]
+            return float_value
+            #return None
     def set_mode(self,data):
         asyncio.run(self.write_coil(self.object.coil_mode,False if data=='false' else True))
         return self.get_mode()

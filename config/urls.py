@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include,reverse_lazy
+from django.urls import path,include,reverse_lazy,reverse
 from django.shortcuts import render,HttpResponse
 from django.views.generic import TemplateView
 from core.log.utils import MyLoginRequiredMixin
@@ -91,6 +91,13 @@ def init_groups_permission_sueruser(init=False):
     
 init_groups_permission_sueruser(True)
 
+class QR(TemplateView):
+    template_name='QR.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        home_qr_url=self.request.build_absolute_uri(reverse('prot'))
+        context["home_qr_url"] = home_qr_url
+        return context
 
 class InitView(TemplateView):
     def get(self,request):
@@ -101,6 +108,7 @@ class InitView(TemplateView):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('init/',InitView.as_view()),
+    path('QR/',QR.as_view(),name='qr'),
     path('',RedirectView.as_view(pattern_name="prot")),
     path('log/',include('core.log.urls')),
     path('user/',include('core.user.urls')),
