@@ -62,6 +62,7 @@ class ModBusObject():
         try:
             self.client.connect()
             coil=self.client.read_coils(coil)
+            time.sleep(1)
             self.client.close()
             return coil.bits[0]
         except:
@@ -71,6 +72,7 @@ class ModBusObject():
             self.client.connect()
             _register=self.client.read_holding_registers(register)
             self.client.close()
+            time.sleep(1)
             return int(_register.registers[0])  
         except:
             return None
@@ -84,8 +86,7 @@ class ModBusObject():
             binary_data = struct.pack('!f', value)
             # Extract the two unsigned integers from the binary representation
             uint1, uint2 = struct.unpack('!HH', binary_data)
-            a=self.client.write_registers(register,[uint1,uint2])
-            print("A",a.isError())
+            self.client.write_registers(register,[uint1,uint2])
             self.client.close()
             
     async def read_registers(self,register):
@@ -99,7 +100,7 @@ class ModBusObject():
         except:
             return None
     def set_mode(self,data):
-        asyncio.run(self.write_coil(self.object.coil_mode,True if data=='false' else False))
+        asyncio.run(self.write_coil(self.object.coil_mode,False if data=='false' else True))
         return self.get_mode()
         
     def set_motor(self,data):
@@ -148,11 +149,15 @@ class ModBusObject():
         return {
             'NT':self.get_tank(),
             'NC':self.get_cistern(),
-            'AC':self.get_output(),
             'SP':self.get_setpoint(),
             'motor':self.get_motor(),
             'valve':self.get_valve(),
             'conduct':self.get_conduct(),
+            }
+    def get_data1(self):
+        return {
+            'AC':self.get_output(),
+            'V':self.get_valve(),
             }
     
     def get_datas(self,count=10):

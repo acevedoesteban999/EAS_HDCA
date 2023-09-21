@@ -108,6 +108,8 @@ class ModBusDevice(MyLoginRequiredMixin,DetailView):
             #print(request.POST)
             if request.POST.get('action')=="data":
                 return JsonResponse({'response':self.modbus_object.get_data()},safe=False)
+            elif request.POST.get('action')=="data_1":
+                return JsonResponse({'response':self.modbus_object.get_data1()},safe=False)
             elif request.POST.get('action')=="mode":
                 return JsonResponse({'response':self.modbus_object.set_mode(request.POST.get('data'))},safe=False)
             elif request.POST.get('action')=="setpoint":

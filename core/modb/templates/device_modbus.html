@@ -29,9 +29,14 @@
         </div>
         
         <div class="row align-items-center">
-            <div class="col-12">
+            <div class="col-8">
                 {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
                 {% include 'realtimechart_modbus.html' with prfx="_1" %}
+  
+            </div>
+            <div class="col-4">
+                {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
+                {% include 'realtimechart_modbus1.html' with prfx="_2" %}
   
             </div>
         </div>

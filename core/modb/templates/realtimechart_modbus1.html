@@ -4,31 +4,23 @@
 {% block icon %}{% endblock  %}
 {% block datasets %}
 {
-    label: "Tanque",
+    label: "Válvula",
     tension: 0.1,
-    fill: false,
+    fill: true,
     borderColor: "",
     data: [],
 },
 {
-    label: "Cisterna",
+    label: "Control",
     tension: 0.1,
     fill: false,
-    borderColor: "",
-    data: [],
-},
-{
-    label: "SetPoint",
-    fill: false,
-    borderDash: [5, 5], 
-    tension: 0,
     borderColor: "",
     data: [],
 },
 {% endblock  %}
 {% block duration %}{% if perms.user.is_development %}35000{% else %}50000{% endif %}{% endblock  %}
-{% block refresh %}{% if perms.user.is_development %}3500{% else %}5000{% endif %}{% endblock  %}
-{% block delay %}{% if perms.user.is_development %}3500{% else %}5000{% endif %}{% endblock  %}
+{% block refresh %}{% if perms.user.is_development %}2000{% else %}5000{% endif %}{% endblock  %}
+{% block delay %}{% if perms.user.is_development %}2000{% else %}5000{% endif %}{% endblock  %}
 {% block on_refresh %}
 {% comment %} _data=JSON.stringify({ action: 'data'});
 fetch("{{url}}", {
@@ -59,7 +51,7 @@ fetch("{{url}}", {
 $.ajax({
     url: '{{url}}',
     data: {
-        'action': 'data',
+        'action': 'data_1',
     },
     type: 'POST',
     headers: {
@@ -67,36 +59,17 @@ $.ajax({
     },
     dataType: 'json',
     success: function (request) {
-        if(request.response.motor )
-            $('#IdFan_Icon').attr('class', 'badge bg-success');
-        else
-            $('#IdFan_Icon').attr('class', 'badge bg-danger');
-        $('#valve_num_id').text(request.response.valve)
-        $('#IdValve_Icon').attr('class', 'badge bg-info');
-        
-        if(request.response.conduct )
-            $('#IdCondu_Icon').attr('class', 'badge bg-success');
-        else
-            $('#IdCondu_Icon').attr('class', 'badge bg-danger');
-            
         myChart{{prfx}}.data.datasets[0].data.push({
             x:Date.now(),
-            y:request.response.NT
+            y:request.response.V
         });
         myChart{{prfx}}.data.datasets[1].data.push({
             x:Date.now(),
-            y:request.response.NC
-        });
-        myChart{{prfx}}.data.datasets[2].data.push({
-            x:Date.now(),
-            y:request.response.SP
+            y:request.response.AC
         });
         myChart{{prfx}}.update('quiet');
     },
     error: function (jqXHR, textStatus, errorThrown) {
-        $('#IdFan_Icon').attr('class', 'badge bg-secondary');
-        $('#IdValve_Icon').attr('class', 'badge bg-secondary');
-        $('#IdCondu_Icon').attr('class', 'badge bg-secondary');
     }
 }) 
 
