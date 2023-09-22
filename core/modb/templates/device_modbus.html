@@ -15,10 +15,11 @@
                 </div>     
             </div>
             <div class="col-4">
-
-                <button type="button" class="m-0 py-1 btn btn-info" data-toggle="modal" data-target="#modal-config">
-                    <i class="fas fa-edit"></i>
-                </button>
+                {% if perms.user.modbus_perm %}
+                    <button type="button" class="m-0 py-1 btn btn-info" data-toggle="modal" data-target="#modal-config">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                {% endif %}
             </div>
             <div class="col-4">
                 <div class="h4">
@@ -28,9 +29,14 @@
         </div>
         
         <div class="row align-items-center">
-            <div class="col-12">
+            <div class="col-8">
                 {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
                 {% include 'realtimechart_modbus.html' with prfx="_1" %}
+  
+            </div>
+            <div class="col-4">
+                {% comment %} {% include 'chart_modbus.html' %} {% endcomment %}
+                {% include 'realtimechart_modbus1.html' with prfx="_2" %}
   
             </div>
         </div>
@@ -73,55 +79,57 @@
         <hr>
     </div>
         {% comment %} MODALS {% endcomment %}
-        <div class="modal fade" id="modal-config" style="display: none;" aria-hidden="true"> 
-            
-            <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                    
-                    <div class="modal-header">
-                        <h4 class="modal-title">Configurar</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container text-center m-2 p-2 text-dark">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <div class="h5" >Modo</div>
-                                            <div class="m-3 custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
-                                                <input disabled type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
-                                                <label class="custom-control-label" id="labelswitchMode" for="switchMode">???</label>
-                                            </div>
-                                            
-                                            <div class="d-none" id="divManual">
-                                                <div class="card">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-6">
-                                                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                                <input disabled type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
-                                                                <label class="custom-control-label" id="labelswitchMotor" for="switchMotor">???</label>
+        {% if perms.user.modbus_perm %}
+            <div class="modal fade" id="modal-config" style="display: none;" aria-hidden="true"> 
+                
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        
+                        <div class="modal-header">
+                            <h4 class="modal-title">Configurar</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container text-center m-2 p-2 text-dark">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <div class="h5" >Modo</div>
+                                                <div class="m-3 custom-control custom-switch custom-switch-off-warning custom-switch-on-success">
+                                                    <input disabled type="checkbox" onchange="ChangeMode()" class="custom-control-input" id="switchMode">
+                                                    <label class="custom-control-label" id="labelswitchMode" for="switchMode">???</label>
+                                                </div>
+                                                
+                                                <div class="d-none" id="divManual">
+                                                    <div class="card">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-6">
+                                                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                                    <input disabled type="checkbox" onchange="ChangeMotor()" class="custom-control-input" id="switchMotor">
+                                                                    <label class="custom-control-label" id="labelswitchMotor" for="switchMotor">???</label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="mt-2 mr-2">
-                                                                
-                                                                <input disabled type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
-                                                                <div class="h6" id="ValveValue">???</div>
+                                                            <div class="col-6">
+                                                                <div class="mt-2 mr-2">
+                                                                    
+                                                                    <input disabled type="range" onchange="ChangeValve()" class="custom-range custom-range-info" id="rangueValve">
+                                                                    <div class="h6" id="ValveValue">???</div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="m-3">
+                                                    <label for="rangueSetPoint" id="SetPointLabel">Set Point</label>
+                                                    <input disabled type="range" onchange="ChangeSetPoint()" class="custom-range custom-range-teal" id="rangueSetPoint">
+                                                    <div class="h6" id="setPointValue">???</div>
+                                                </div>
+                        
+                                                
                                             </div>
-                                            <div class="m-3">
-                                                <label for="rangueSetPoint" id="SetPointLabel">Set Point</label>
-                                                <input disabled type="range" onchange="ChangeSetPoint()" class="custom-range custom-range-teal" id="rangueSetPoint">
-                                                <div class="h6" id="setPointValue">???</div>
-                                            </div>
-                    
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -129,207 +137,207 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
+        {% endif %}
+    {% if perms.user.modbus_perm %}
+        <script>
             
-        </div>
-        
-    
-    <script>
-        function ChangeMotor()
-        {
-            document.getElementById('labelswitchMotor').innerHTML="...",
+            function ChangeMotor()
+            {
+                document.getElementById('labelswitchMotor').innerHTML="...",
 
-            $.ajax({
-                url: '{{url}}',
-                data: {
-                    'action': "motor",  
-                    'data':  document.getElementById('switchMotor').checked,
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                dataType: 'json',
-                success: function (request) {
-                    console.log(request)
-                    if(request.response==false)
-                    {
-                        document.getElementById('labelswitchMotor').innerHTML="Off";
-                        document.getElementById('switchMotor').checked=false;
+                $.ajax({
+                    url: '{{url}}',
+                    data: {
+                        'action': "motor",  
+                        'data':  document.getElementById('switchMotor').checked,
+                    },
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        console.log(request)
+                        if(request.response==false)
+                        {
+                            document.getElementById('labelswitchMotor').innerHTML="Off";
+                            document.getElementById('switchMotor').checked=false;
+                        }
+                        else
+                        {    
+                            document.getElementById('labelswitchMotor').innerHTML="On";
+                            document.getElementById('switchMotor').checked=true;
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        document.getElementById('switchMotor').checked=document.getElementById('switchMotor').checked ? false : true;
+                        document.getElementById('labelswitchMotor').innerHTML=document.getElementById('switchMotor').checked ? "On" : "Off";
                     }
-                    else
-                    {    
-                        document.getElementById('labelswitchMotor').innerHTML="On";
-                        document.getElementById('switchMotor').checked=true;
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    document.getElementById('switchMotor').checked=document.getElementById('switchMotor').checked ? false : true;
-                    document.getElementById('labelswitchMotor').innerHTML=document.getElementById('switchMotor').checked ? "On" : "Off";
-                }
-            })
-        }
-        function ChangeValve()
-        {
-            document.getElementById('ValveValue').innerHTML="...",
-            $.ajax({
-                url: '{{url}}',
-                data: {
-                    'action': "valve",  
-                    'data':  document.getElementById('rangueValve').value,
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                dataType: 'json',
-                success: function (request) {
-                    console.log(request)
-                    document.getElementById('ValveValue').innerHTML=request.response;
-                    document.getElementById('rangueValve').value=request.response;
-                    
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    document.getElementById('ValveValue').innerHTML="0";
-                    document.getElementById('rangueValve').value=0;
-                }
-            })
-        }
-
-        function ChangeMode()
-        {
-            
-            document.getElementById('labelswitchMode').innerHTML="...",
-            $.ajax({
-                url: '{{url}}',
-                data: {
-                    'action': "mode",  
-                    'data':  document.getElementById('switchMode').checked,
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                dataType: 'json',
-                success: function (request) {
-                    console.log(request)
-                    if(request.response==false)
-                    {
-                        document.getElementById('labelswitchMode').innerHTML="Manual";
-                        document.getElementById('switchMode').checked=false;
-                        document.getElementById('divManual').setAttribute("class",'d-block')
+                })
+            }
+            function ChangeValve()
+            {
+                document.getElementById('ValveValue').innerHTML="...",
+                $.ajax({
+                    url: '{{url}}',
+                    data: {
+                        'action': "valve",  
+                        'data':  document.getElementById('rangueValve').value,
+                    },
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        console.log(request)
+                        document.getElementById('ValveValue').innerHTML=request.response;
+                        document.getElementById('rangueValve').value=request.response;
                         
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        document.getElementById('ValveValue').innerHTML="0";
+                        document.getElementById('rangueValve').value=0;
                     }
-                    else
-                    {    
-                        document.getElementById('labelswitchMode').innerHTML="PID";
-                        document.getElementById('switchMode').checked=true;
-                        document.getElementById('divManual').setAttribute("class",'d-none')
+                })
+            }
+
+            function ChangeMode()
+            {
+                
+                document.getElementById('labelswitchMode').innerHTML="...",
+                $.ajax({
+                    url: '{{url}}',
+                    data: {
+                        'action': "mode",  
+                        'data':  document.getElementById('switchMode').checked,
+                    },
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        console.log(request)
+                        if(request.response==false)
+                        {
+                            document.getElementById('labelswitchMode').innerHTML="Manual";
+                            document.getElementById('switchMode').checked=false;
+                            document.getElementById('divManual').setAttribute("class",'d-block')
+                            
+                        }
+                        else
+                        {    
+                            document.getElementById('labelswitchMode').innerHTML="PID";
+                            document.getElementById('switchMode').checked=true;
+                            document.getElementById('divManual').setAttribute("class",'d-none')
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if(document.getElementById('switchMode').checked)
+                        {
+                            document.getElementById('switchMode').checked= false
+                            document.getElementById('labelswitchMode').innerHTML="PID"
+                            document.getElementById('divManual').setAttribute("class",'d-none')
+                        }
+                        else
+                        {
+                            document.getElementById('switchMode').checked= true
+                            document.getElementById('labelswitchMode').innerHTML="Manual"
+                            document.getElementById('divManual').setAttribute("class",'d-block')
+                        }
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if(document.getElementById('switchMode').checked)
-                    {
-                        document.getElementById('switchMode').checked= false
-                        document.getElementById('labelswitchMode').innerHTML="PID"
-                        document.getElementById('divManual').setAttribute("class",'d-none')
+                })
+                
+            }
+            //ChangeMode()
+            function ChangeSetPoint()
+            {
+                document.getElementById('setPointValue').innerHTML="...",
+                $.ajax({
+                    url: '{{url}}',
+                    data: {
+                        'action': "setpoint",  
+                        'data':  document.getElementById('rangueSetPoint').value,
+                    },
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        document.getElementById('setPointValue').innerHTML=request.response;
+                        document.getElementById('rangueSetPoint').value=request.response;
+                        
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        document.getElementById('setPointValue').innerHTML="0";
+                        document.getElementById('rangueSetPoint').value="0";
                     }
-                    else
-                    {
-                        document.getElementById('switchMode').checked= true
-                        document.getElementById('labelswitchMode').innerHTML="Manual"
-                        document.getElementById('divManual').setAttribute("class",'d-block')
+                })
+            }
+            //ChangeSetPoint()
+            function First_Load()
+            {
+                $.ajax({
+                    url: '{{url}}',
+                    data: {
+                        'action': "get_datas",  
+                    },
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    dataType: 'json',
+                    success: function (request) {
+                        $('#switchMode').prop("disabled", false);
+                        $('#switchMode').prop("checked", request.response.mode)
+                        if(request.response.mode==true)
+                        {
+                            $('#labelswitchMode').text("PID")
+                        }
+                        else
+                        {
+                            $('#labelswitchMode').text("Manual")
+                            $('#divManual').attr("class","d-block")
+                        }
+                        
+
+                        $('#switchMotor').prop("disabled", false);
+                        $('#switchMotor').value=request.response.motor
+                        if (request.response.motor==true)
+                        {
+                            $('#labelswitchMotor').text("On")
+                        }
+                        else
+                        {
+                            $('#labelswitchMotor').text("Off")
+                        }
+                        
+                        $('#rangueSetPoint').prop("disabled", false);
+                        $('#rangueSetPoint').val(request.response.setpoint)
+                        $('#setPointValue').text(request.response.setpoint)
+                        
+                        $('#rangueValve').prop("disabled", false);
+                        $('#rangueValve').val(request.response.valve)
+                        $('#ValveValue').text(request.response.valve)
+                        
+                        
+                        
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        setTimeout(First_Load,1000)
                     }
-                }
-            })
+                })
+
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                First_Load()
+            }, false);
             
-        }
-        //ChangeMode()
-        function ChangeSetPoint()
-        {
-            document.getElementById('setPointValue').innerHTML="...",
-            $.ajax({
-                url: '{{url}}',
-                data: {
-                    'action': "setpoint",  
-                    'data':  document.getElementById('rangueSetPoint').value,
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                dataType: 'json',
-                success: function (request) {
-                    document.getElementById('setPointValue').innerHTML=request.response;
-                    document.getElementById('rangueSetPoint').value=request.response;
-                    
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    document.getElementById('setPointValue').innerHTML="0";
-                    document.getElementById('rangueSetPoint').value="0";
-                }
-            })
-        }
-        //ChangeSetPoint()
-        function First_Load()
-        {
-            $.ajax({
-                url: '{{url}}',
-                data: {
-                    'action': "get_datas",  
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                dataType: 'json',
-                success: function (request) {
-                    $('#switchMode').prop("disabled", false);
-                    $('#switchMode').prop("checked", request.response.mode)
-                    if(request.response.mode==true)
-                    {
-                        $('#labelswitchMode').text("PID")
-                    }
-                    else
-                    {
-                        $('#labelswitchMode').text("Manual")
-                        $('#divManual').attr("class","d-block")
-                    }
-                    
-
-                    $('#switchMotor').prop("disabled", false);
-                    $('#switchMotor').value=request.response.motor
-                    if (request.response.motor==true)
-                    {
-                        $('#labelswitchMotor').text("On")
-                    }
-                    else
-                    {
-                        $('#labelswitchMotor').text("Off")
-                    }
-                    
-                    $('#rangueSetPoint').prop("disabled", false);
-                    $('#rangueSetPoint').val(request.response.setpoint)
-                    $('#setPointValue').text(request.response.setpoint)
-                    
-                    $('#rangueValve').prop("disabled", false);
-                    $('#rangueValve').val(request.response.valve)
-                    $('#ValveValue').text(request.response.valve)
-                    
-                    
-                    
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    setTimeout(First_Load,1000)
-                }
-            })
-
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            First_Load()
-         }, false);
-        
-    </script>
-    
+        </script>
+    {% endif %}
 
 {% endblock  %}

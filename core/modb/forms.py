@@ -10,12 +10,13 @@ class ModBusForm(forms.ModelForm):
         widgets = {
             'slug': forms.TextInput(attrs={'class':'form-control','placeholder': 'Ingrese un nombre'}),
             'type':forms.Select(attrs={'class':'form-control'}),
-            'coil_motor':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Motor'}),
             'coil_conductor':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil de Conductividad'}),
+            'coil_motor':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Motor'}),
             'coil_mode':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Coil del Tanque'}),
             'register_valve':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de la Válvula'}),
             'register_tank':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro del Tanque'}),
             'register_cistern':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de la Cisterna'}),
+            'registers_output':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de Salida de Control'}),
             'register_setpoint':forms.NumberInput(attrs={'class':'form-control','placeholder': 'Registro de SetPoint'}),
         }
         

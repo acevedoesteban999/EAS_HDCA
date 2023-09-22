@@ -13,17 +13,12 @@ from django.db.models import F,Value,IntegerField
 
 class ModBusView(MyLoginRequiredMixin,ListView):
     template_name="list_modbus.html"
-    #permission_required="user\.is_development"
+    
     model=ModBus
-    # def get_queryset(self):
-    #     data=super().get_queryset()
-    #     for ob in data.values():
-    #         ob.update({'active':ModBusObject.is_active(ob.get('ip'),ob.get('type'))})
-    #     print(data.values())            
-    #     return data
+    
     def post(self,request, *args, **kwargs):
         if self.is_ajax():
-            print(request.POST)
+            #print(request.POST)
             if request.POST.get('action')=="check_data":
                 return JsonResponse({'response':{"active":ModBusObject.is_active(ModBus.objects.get(id=request.POST.get("data")).ip)}},safe=False)
             
@@ -63,7 +58,7 @@ class ModBusCreate(MyLoginRequiredMixin,CreateView):
     
 class ModBusUpdate(MyLoginRequiredMixin,UpdateView):
     model=ModBus
-    #permission_required="user\.is_development"
+    permission_required="user.modbus_perm"
     template_name="update_modbus.html"
     form_class=ModBusForm   
     
@@ -113,6 +108,8 @@ class ModBusDevice(MyLoginRequiredMixin,DetailView):
             #print(request.POST)
             if request.POST.get('action')=="data":
                 return JsonResponse({'response':self.modbus_object.get_data()},safe=False)
+            elif request.POST.get('action')=="data_1":
+                return JsonResponse({'response':self.modbus_object.get_data1()},safe=False)
             elif request.POST.get('action')=="mode":
                 return JsonResponse({'response':self.modbus_object.set_mode(request.POST.get('data'))},safe=False)
             elif request.POST.get('action')=="setpoint":
@@ -136,7 +133,7 @@ class ModBusDevice(MyLoginRequiredMixin,DetailView):
 class ModBusDelete(MyLoginRequiredMixin,DeleteView):
     model=ModBus
     template_name = 'delete_modbus.html'
-    #permission_required="user\.is_development"
+    permission_required= 'user.modbus_perm'
     success_url=reverse_lazy('modbus_list')
     
     def get_context_data(self, **kwargs):
@@ -148,7 +145,7 @@ class ModBusDelete(MyLoginRequiredMixin,DeleteView):
     
 class ModBusIden(MyLoginRequiredMixin,FormView):
     template_name="ident_modbus.html"
-    #permission_required="user\.is_development"
+    permission_required="user.modbus_perm"
     form_class=ModBusIdent
     
     def dispatch(self, request, *args, **kwargs):

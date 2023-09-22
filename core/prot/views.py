@@ -18,12 +18,12 @@ class ProtocolView(MyLoginRequiredMixin,TemplateView):
                 'text':"ModBus",
                 'color':'info',
             },
-            {
-                "count":I2C.objects.all().count(),
-                'url': reverse_lazy('i2c_list'),
-                'text':"I2C",
-                'color':'success',
-            },
+            # {
+            #     "count":I2C.objects.all().count(),
+            #     'url': reverse_lazy('i2c_list'),
+            #     'text':"I2C",
+            #     'color':'success',
+            # },
             ]
         return context
     

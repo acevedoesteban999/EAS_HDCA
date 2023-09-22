@@ -40,7 +40,8 @@ def init_groups_permission_sueruser(init=False):
                     'act_desact_user',
                     'view_performance',
                     'view_binnacle',
-                    'view_config'
+                    'view_config',
+                    'modbus_perm'
                 ],
                 'Admin':[
                     'is_admin',
@@ -50,13 +51,10 @@ def init_groups_permission_sueruser(init=False):
                     'delete_user',
                     'act_desact_user',
                     'view_performance',
-                    'view_binnacle',
-                    'view_config',
+                    'modbus_perm',
                 ],
                 'Guest':[
                     'is_guest',
-                    #'view_performance',
-                    #'view_binnacle',
                 ]
             }
             for gn,pl in l.items():
