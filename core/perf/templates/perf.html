@@ -3,21 +3,21 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
                 {% include 'perf_realtimechart.html' with prfx="_1" url=url text="CPU" icon='fas fa-tachometer-alt' action="cpu"  %}
   
             </div>
-             <div class="col-6">
+             <div class="col-12 col-sm-6">
                 {% include 'perf_realtimechart.html' with prfx="_2" url=url text="RAM" icon='fas fa-memory' action="ram"  %}
   
             </div> 
         </div>
         <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
                 {% include 'perf_realtimechart.html' with prfx="_3" url=url text="Ethernet" icon='fas fa-network-wired'  action="ethernet" %}
   
             </div>
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
                 {% include 'perf_realtimechart.html' with prfx="_4" url=url text="Temperatura" icon='fas fa-temperature-three-quarters'  action="temp" %}
   
             </div> 
